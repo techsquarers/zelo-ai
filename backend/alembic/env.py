@@ -31,7 +31,10 @@ if config.config_file_name is not None:
 # --------------------------------------------------
 # Force Alembic to use the DATABASE_URL from .env
 # --------------------------------------------------
-config.set_main_option("sqlalchemy.url", settings.DATABASE_URL)
+config.set_main_option(
+    "sqlalchemy.url",
+    settings.DATABASE_URL.replace("%", "%%")
+)
 
 # --------------------------------------------------
 # Target metadata (your tables)
