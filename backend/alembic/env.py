@@ -31,7 +31,10 @@ if config.config_file_name is not None:
 # --------------------------------------------------
 # Force Alembic to use the DATABASE_URL from .env
 # --------------------------------------------------
-config.set_main_option("sqlalchemy.url", settings.DATABASE_URL)
+config.set_main_option(
+    "sqlalchemy.url",
+    settings.DATABASE_URL.replace("%", "%%")
+)
 
 # --------------------------------------------------
 # Target metadata (your tables)
@@ -66,6 +69,10 @@ async def run_async_migrations() -> None:
         config.get_section(config.config_ini_section, {}),
         prefix="sqlalchemy.",
         poolclass=pool.NullPool,
+        connect_args={
+            "statement_cache_size": 0,
+            "prepared_statement_cache_size": 0,
+        }
     )
 
     async with connectable.connect() as connection:

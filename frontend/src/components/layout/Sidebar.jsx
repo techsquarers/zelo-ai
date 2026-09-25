@@ -1,8 +1,23 @@
 import React from 'react';
 import { NavLink, useNavigate } from 'react-router-dom';
-import { LayoutDashboard, Map, TrendingUp, User, Flame, Zap, LogOut, Sparkles } from 'lucide-react';
+import {
+  LayoutDashboard,
+  Map,
+  TrendingUp,
+  User,
+  Flame,
+  LogOut,
+  Shield,
+} from 'lucide-react';
 import { useAuthStore } from '../../store/authStore';
 import { useAppStore } from '../../store/appStore';
+
+const NAV_ITEMS = [
+  { label: 'Missions',  sublabel: 'Today',    path: '/dashboard', icon: LayoutDashboard },
+  { label: 'Campaign',  sublabel: 'Roadmap',   path: '/roadmap',   icon: Map },
+  { label: 'Progress',  sublabel: 'Rank',      path: '/progress',  icon: TrendingUp },
+  { label: 'Profile',   sublabel: 'Settings',  path: '/profile',   icon: User },
+];
 
 export const Sidebar = () => {
   const navigate = useNavigate();
@@ -14,160 +29,226 @@ export const Sidebar = () => {
     navigate('/login');
   };
 
-  const navItems = [
-    { label: 'Today Tasks', path: '/dashboard', icon: LayoutDashboard },
-    { label: 'Career Roadmap', path: '/roadmap', icon: Map },
-    { label: 'Progress & Stats', path: '/progress', icon: TrendingUp },
-    { label: 'My Profile', path: '/profile', icon: User },
-  ];
-
-  const streakCount = summary?.streak?.current_streak || 0;
-  const totalXp = summary?.xp?.total_xp || 0;
-  const level = summary?.xp?.level || 1;
+  const streakCount = summary?.streak?.current_streak ?? 0;
+  const totalXp = summary?.xp?.total_xp ?? 0;
+  const level = summary?.xp?.level ?? Math.floor(totalXp / 100) + 1;
 
   return (
     <aside
       style={{
-        width: '260px',
+        width: 'var(--sidebar-width)',
         height: '100vh',
         position: 'fixed',
         left: 0,
         top: 0,
-        background: 'rgba(15, 20, 28, 0.85)',
-        backdropFilter: 'blur(20px)',
-        borderRight: '1px solid rgba(255, 255, 255, 0.08)',
+        background: 'var(--bg-surface)',
+        borderRight: '1px solid var(--border)',
         display: 'flex',
         flexDirection: 'column',
-        justifyContent: 'space-between',
-        padding: '24px 16px',
         zIndex: 50,
+        overflow: 'hidden',
       }}
     >
-      <div>
-        {/* Brand */}
+      {/* Subtle top warrior edge */}
+      <div style={{
+        position: 'absolute',
+        top: 0,
+        left: 0,
+        right: 0,
+        height: '1px',
+        background: 'linear-gradient(90deg, var(--accent) 0%, transparent 70%)',
+      }} />
+
+      {/* Brand */}
+      <div
+        style={{
+          padding: '20px 16px 16px',
+          borderBottom: '1px solid var(--border)',
+        }}
+      >
         <div
           onClick={() => navigate('/dashboard')}
           style={{
             display: 'flex',
             alignItems: 'center',
-            gap: '12px',
-            padding: '8px 12px',
-            marginBottom: '28px',
+            gap: '10px',
             cursor: 'pointer',
+            padding: '4px 6px',
+            borderRadius: 'var(--radius-md)',
+            transition: 'background var(--t-fast)',
           }}
+          onMouseEnter={(e) => e.currentTarget.style.background = 'var(--bg-elevated)'}
+          onMouseLeave={(e) => e.currentTarget.style.background = 'transparent'}
         >
+          {/* Crest mark */}
           <div
             style={{
-              width: '38px',
-              height: '38px',
-              borderRadius: '12px',
-              background: 'linear-gradient(135deg, #22D3EE 0%, #8B5CF6 100%)',
+              width: '30px',
+              height: '30px',
+              borderRadius: 'var(--radius-md)',
+              background: 'var(--accent)',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
+              flexShrink: 0,
             }}
           >
-            <Sparkles size={22} color="#0B0F14" />
+            <Shield size={17} color="#0C0E11" strokeWidth={2.5} />
           </div>
           <div>
-            <h1 style={{ fontSize: '1.25rem', fontWeight: 800, letterSpacing: '-0.02em', color: '#F3F4F6' }}>
-              Zilo<span style={{ color: '#22D3EE' }}>.ai</span>
-            </h1>
-            <p style={{ fontSize: '0.75rem', color: '#6B7280' }}>Tech Career Coach</p>
-          </div>
-        </div>
-
-        {/* Gamification Stats Card */}
-        <div
-          style={{
-            background: 'rgba(22, 31, 44, 0.6)',
-            border: '1px solid rgba(255, 255, 255, 0.08)',
-            borderRadius: '16px',
-            padding: '12px',
-            marginBottom: '24px',
-            display: 'flex',
-            justifyContent: 'space-around',
-            alignItems: 'center',
-          }}
-        >
-          {/* Streak */}
-          <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-            <Flame size={20} color="#F97316" fill="#F97316" />
-            <div>
-              <div style={{ fontSize: '0.9rem', fontWeight: 700, color: '#F97316' }}>
-                {streakCount} d
-              </div>
-              <div style={{ fontSize: '0.7rem', color: '#9CA3AF' }}>Streak</div>
+            <div style={{
+              fontSize: 'var(--text-md)',
+              fontWeight: 700,
+              color: 'var(--text-primary)',
+              letterSpacing: '-0.02em',
+              lineHeight: 1.15,
+            }}>
+              Zilo<span style={{ color: 'var(--accent)' }}>AI</span>
             </div>
-          </div>
-
-          <div style={{ width: '1px', height: '24px', background: 'rgba(255, 255, 255, 0.1)' }} />
-
-          {/* XP */}
-          <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-            <Zap size={20} color="#34D399" fill="#34D399" />
-            <div>
-              <div style={{ fontSize: '0.9rem', fontWeight: 700, color: '#34D399' }}>
-                {totalXp} XP
-              </div>
-              <div style={{ fontSize: '0.7rem', color: '#9CA3AF' }}>Lvl {level}</div>
+            <div style={{ fontSize: '0.65rem', color: 'var(--text-tertiary)', fontWeight: 500, letterSpacing: '0.04em', textTransform: 'uppercase' }}>
+              Tech Career
             </div>
           </div>
         </div>
-
-        {/* Navigation Links */}
-        <nav style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
-          {navItems.map((item) => {
-            const Icon = item.icon;
-            return (
-              <NavLink
-                key={item.path}
-                to={item.path}
-                style={({ isActive }) => ({
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: '12px',
-                  padding: '11px 16px',
-                  borderRadius: '14px',
-                  fontSize: '0.9rem',
-                  fontWeight: 500,
-                  transition: 'all 0.2s ease',
-                  color: isActive ? '#22D3EE' : '#9CA3AF',
-                  background: isActive ? 'rgba(34, 211, 238, 0.12)' : 'transparent',
-                  border: isActive ? '1px solid rgba(34, 211, 238, 0.3)' : '1px solid transparent',
-                })}
-              >
-                <Icon size={18} />
-                <span>{item.label}</span>
-              </NavLink>
-            );
-          })}
-        </nav>
       </div>
 
+      {/* Rank strip */}
+      <div
+        style={{
+          margin: '12px 16px',
+          background: 'var(--bg-elevated)',
+          border: '1px solid var(--border)',
+          borderRadius: 'var(--radius-lg)',
+          padding: '10px 12px',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'space-between',
+        }}
+      >
+        <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+          <Flame size={15} color="var(--streak)" fill="var(--streak)" />
+          <span style={{ fontSize: 'var(--text-sm)', fontWeight: 700, color: 'var(--streak)' }}>
+            {streakCount}d
+          </span>
+          <span style={{ fontSize: 'var(--text-xs)', color: 'var(--text-tertiary)' }}>streak</span>
+        </div>
+        <div style={{ width: '1px', height: '16px', background: 'var(--border)' }} />
+        <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+          <span style={{ fontSize: 'var(--text-xs)', color: 'var(--text-tertiary)' }}>Rank</span>
+          <span style={{ fontSize: 'var(--text-sm)', fontWeight: 700, color: 'var(--xp)' }}>
+            Lv.{level}
+          </span>
+        </div>
+        <div style={{ width: '1px', height: '16px', background: 'var(--border)' }} />
+        <div style={{ fontSize: 'var(--text-xs)', color: 'var(--text-tertiary)' }}>
+          <span style={{ color: 'var(--accent)', fontWeight: 600 }}>{totalXp}</span> XP
+        </div>
+      </div>
+
+      {/* Nav — section label */}
+      <div style={{ padding: '4px 22px 6px', marginTop: '4px' }}>
+        <span style={{
+          fontSize: '0.65rem',
+          fontWeight: 700,
+          textTransform: 'uppercase',
+          letterSpacing: '0.08em',
+          color: 'var(--text-tertiary)',
+        }}>
+          Navigate
+        </span>
+      </div>
+
+      {/* Navigation links */}
+      <nav style={{ padding: '0 12px', display: 'flex', flexDirection: 'column', gap: '2px', flex: 1 }}>
+        {NAV_ITEMS.map((item) => {
+          const Icon = item.icon;
+          return (
+            <NavLink
+              key={item.path}
+              to={item.path}
+              style={({ isActive }) => ({
+                display: 'flex',
+                alignItems: 'center',
+                gap: '10px',
+                padding: '8px 10px',
+                borderRadius: 'var(--radius-lg)',
+                fontSize: 'var(--text-sm)',
+                fontWeight: isActive ? 600 : 500,
+                letterSpacing: '-0.01em',
+                color: isActive ? 'var(--accent)' : 'var(--text-secondary)',
+                background: isActive ? 'var(--accent-dim)' : 'transparent',
+                border: isActive ? '1px solid var(--accent-border)' : '1px solid transparent',
+                textDecoration: 'none',
+                transition: `all var(--t-base)`,
+              })}
+              onMouseEnter={(e) => {
+                if (!e.currentTarget.style.background.includes('accent-dim')) {
+                  e.currentTarget.style.background = 'var(--bg-elevated)';
+                }
+              }}
+              onMouseLeave={(e) => {
+                if (!e.currentTarget.style.background.includes('accent-dim')) {
+                  e.currentTarget.style.background = 'transparent';
+                }
+              }}
+            >
+              {({ isActive }) => (
+                <>
+                  <Icon size={16} />
+                  <div style={{ flex: 1 }}>
+                    <div style={{ lineHeight: 1.2 }}>{item.label}</div>
+                    <div style={{ fontSize: '0.65rem', color: isActive ? 'var(--accent-dim, rgba(56,189,248,0.6))' : 'var(--text-tertiary)', fontWeight: 500, letterSpacing: '0.01em' }}>
+                      {item.sublabel}
+                    </div>
+                  </div>
+                  {isActive && (
+                    <div style={{
+                      width: '4px',
+                      height: '4px',
+                      borderRadius: '50%',
+                      background: 'var(--accent)',
+                      flexShrink: 0,
+                    }} />
+                  )}
+                </>
+              )}
+            </NavLink>
+          );
+        })}
+      </nav>
+
       {/* Footer / Logout */}
-      <div>
+      <div style={{ padding: '12px 12px 20px', borderTop: '1px solid var(--border)' }}>
         <button
           onClick={handleLogout}
           style={{
             width: '100%',
             display: 'flex',
             alignItems: 'center',
-            gap: '12px',
-            padding: '12px 16px',
-            borderRadius: '14px',
-            fontSize: '0.9rem',
+            gap: '10px',
+            padding: '8px 10px',
+            borderRadius: 'var(--radius-lg)',
+            fontSize: 'var(--text-sm)',
             fontWeight: 500,
-            color: '#F87171',
-            background: 'rgba(239, 68, 68, 0.1)',
-            border: '1px solid rgba(239, 68, 68, 0.2)',
+            color: 'var(--text-tertiary)',
+            background: 'transparent',
+            border: '1px solid transparent',
             cursor: 'pointer',
-            transition: 'background 0.2s ease',
+            transition: `all var(--t-base)`,
+            letterSpacing: '-0.01em',
           }}
-          onMouseEnter={(e) => (e.currentTarget.style.background = 'rgba(239, 68, 68, 0.2)')}
-          onMouseLeave={(e) => (e.currentTarget.style.background = 'rgba(239, 68, 68, 0.1)')}
+          onMouseEnter={(e) => {
+            e.currentTarget.style.color = 'var(--text-danger)';
+            e.currentTarget.style.background = 'var(--danger-dim)';
+            e.currentTarget.style.borderColor = 'var(--danger-border)';
+          }}
+          onMouseLeave={(e) => {
+            e.currentTarget.style.color = 'var(--text-tertiary)';
+            e.currentTarget.style.background = 'transparent';
+            e.currentTarget.style.borderColor = 'transparent';
+          }}
         >
-          <LogOut size={18} />
+          <LogOut size={16} />
           <span>Sign Out</span>
         </button>
       </div>

@@ -1,6 +1,6 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Sparkles, Home } from 'lucide-react';
+import { Shield, Home } from 'lucide-react';
 import { Button } from '../components/ui/Button';
 
 export const NotFound = () => {
@@ -10,43 +10,45 @@ export const NotFound = () => {
     <div
       style={{
         minHeight: '100vh',
-        background: '#0B0F14',
+        background: 'var(--bg-base)',
         display: 'flex',
         flexDirection: 'column',
         alignItems: 'center',
         justifyContent: 'center',
         padding: '24px',
         textAlign: 'center',
-        color: '#F3F4F6',
+        color: 'var(--text-primary)',
+        fontFamily: 'var(--font-ui)',
       }}
     >
       <div
         style={{
-          width: '64px',
-          height: '64px',
-          borderRadius: '20px',
-          background: 'linear-gradient(135deg, #22D3EE 0%, #8B5CF6 100%)',
+          width: '56px',
+          height: '56px',
+          borderRadius: 'var(--radius-lg)',
+          background: 'var(--accent)',
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
-          marginBottom: '24px',
+          marginBottom: '20px',
+          boxShadow: '0 0 24px var(--accent-glow)',
         }}
       >
-        <Sparkles size={36} color="#0B0F14" />
+        <Shield size={28} color="#0C0E11" strokeWidth={2.5} />
       </div>
 
-      <h1 style={{ fontSize: '4rem', fontWeight: 800, color: '#22D3EE', letterSpacing: '-0.03em' }}>
+      <h1 style={{ fontSize: '3.5rem', fontWeight: 800, color: 'var(--accent)', letterSpacing: '-0.03em', margin: 0 }}>
         404
       </h1>
-      <h2 style={{ fontSize: '1.5rem', fontWeight: 700, margin: '12px 0 8px' }}>
-        Page Not Found
+      <h2 style={{ fontSize: 'var(--text-lg)', fontWeight: 700, margin: '10px 0 6px', color: 'var(--text-primary)' }}>
+        Sector Out of Bounds
       </h2>
-      <p style={{ color: '#9CA3AF', maxWidth: '400px', marginBottom: '28px' }}>
-        The route you are looking for doesn't exist or has been moved.
+      <p style={{ color: 'var(--text-tertiary)', fontSize: 'var(--text-sm)', maxWidth: '380px', marginBottom: '24px' }}>
+        The requested path does not exist in the Zilo-AI campaign terminal.
       </p>
 
-      <Button variant="primary" leftIcon={Home} onClick={() => navigate('/')}>
-        Back to Safety
+      <Button variant="primary" leftIcon={Home} onClick={() => navigate('/dashboard')}>
+        Return to Command Dashboard
       </Button>
     </div>
   );

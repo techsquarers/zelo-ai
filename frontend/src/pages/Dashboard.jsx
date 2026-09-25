@@ -2,15 +2,13 @@ import React, { useState, useEffect } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
-  Sparkles,
   Play,
   RotateCcw,
   CheckCircle2,
   Calendar,
-  Flame,
-  Zap,
-  MapPin,
   Clock,
+  Shield,
+  Target,
 } from 'lucide-react';
 import { AppShell } from '../components/layout/AppShell';
 import { Card } from '../components/ui/Card';
@@ -20,7 +18,7 @@ import { Spinner, Skeleton } from '../components/ui/Spinner';
 import { showToast } from '../components/ui/Toast';
 import { getProgressSummaryApi } from '../api/progress';
 import { getTodayTasksApi, completeTaskApi } from '../api/tasks';
-import { getCurrentRoadmapApi, generateRoadmapApi } from '../api/roadmaps';
+import { getCurrentRoadmapApi } from '../api/roadmaps';
 import { useAppStore } from '../store/appStore';
 import { TaskCard } from '../components/dashboard/TaskCard';
 import { StreakWidget } from '../components/dashboard/StreakWidget';
@@ -68,14 +66,12 @@ export const Dashboard = () => {
   const {
     data: roadmapData,
     isLoading: isRoadmapLoading,
-    refetch: refetchRoadmap,
   } = useQuery({
     queryKey: ['currentRoadmap'],
     queryFn: getCurrentRoadmapApi,
     retry: false,
   });
 
-  // Sync summary to appStore when query completes
   useEffect(() => {
     if (summaryData) {
       setSummary(summaryData);
@@ -90,7 +86,6 @@ export const Dashboard = () => {
       await queryClient.cancelQueries({ queryKey: ['todayTasks'] });
       const previousTasks = queryClient.getQueryData(['todayTasks']);
 
-      // Optimistically update tasks list
       if (previousTasks?.tasks) {
         const updatedTasks = previousTasks.tasks.map((t) =>
           t.id === taskId ? { ...t, status } : t
@@ -107,7 +102,6 @@ export const Dashboard = () => {
       showToast(err?.response?.data?.detail || 'Failed to update task status.', 'error');
     },
     onSuccess: async (data, variables) => {
-      // Refetch summary & tasks to synchronize server state
       const [newSummary, newTasksData] = await Promise.all([
         refetchSummary(),
         refetchTasks(),
@@ -134,7 +128,6 @@ export const Dashboard = () => {
     completeMutation.mutate({ taskId, status });
   };
 
-  // Extract task metrics
   const tasksList = tasksData?.tasks || [];
   const sortedTasks = [...tasksList].sort((a, b) => (a.order || 0) - (b.order || 0));
 
@@ -152,45 +145,46 @@ export const Dashboard = () => {
         elem.scrollIntoView({ behavior: 'smooth', block: 'center' });
       }
     } else {
-      showToast('All tasks for today are already complete!', 'success');
+      showToast('All missions for today are already complete!', 'success');
     }
   };
 
   const isInitialLoading = isSummaryLoading || isTasksLoading;
 
   return (
-    <AppShell title="Daily Dashboard">
-      <div style={{ display: 'flex', flexDirection: 'column', gap: '28px', maxWidth: '1200px', margin: '0 auto' }}>
+    <AppShell title="Missions Command">
+      <div style={{ display: 'flex', flexDirection: 'column', gap: '24px', maxWidth: '1200px', margin: '0 auto' }}>
         {/* Top Header Card */}
-        <Card padding="28px" glow glowColor="cyan">
+        <Card padding="24px" glow glowColor="accent" accent>
           <div
             style={{
               display: 'flex',
               justifyContent: 'space-between',
               alignItems: 'center',
               flexWrap: 'wrap',
-              gap: '20px',
+              gap: '16px',
             }}
           >
             <div>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '6px' }}>
-                <Calendar size={18} color="#22D3EE" />
-                <span style={{ fontSize: '0.85rem', color: '#22D3EE', fontWeight: 600 }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '4px' }}>
+                <Calendar size={15} color="var(--accent)" />
+                <span style={{ fontSize: 'var(--text-xs)', color: 'var(--accent)', fontWeight: 700, letterSpacing: '0.02em' }}>
                   {todayFormatted}
                 </span>
               </div>
               <h1
                 style={{
-                  fontSize: '2rem',
+                  fontSize: 'var(--text-xl)',
                   fontWeight: 800,
-                  color: '#F3F4F6',
+                  color: 'var(--text-primary)',
                   letterSpacing: '-0.02em',
+                  margin: 0,
                 }}
               >
-                Let’s lock in today.
+                Execute today’s missions.
               </h1>
-              <p style={{ fontSize: '0.95rem', color: '#9CA3AF', marginTop: '4px' }}>
-                Execute today’s handpicked learning tasks to stay consistent.
+              <p style={{ fontSize: 'var(--text-xs)', color: 'var(--text-tertiary)', marginTop: '2px' }}>
+                Relentless execution builds true engineering mastery.
               </p>
             </div>
 
@@ -199,21 +193,21 @@ export const Dashboard = () => {
               style={{
                 display: 'flex',
                 alignItems: 'center',
-                gap: '16px',
-                background: 'rgba(255, 255, 255, 0.04)',
-                border: '1px solid rgba(255, 255, 255, 0.08)',
-                borderRadius: '20px',
-                padding: '12px 20px',
+                gap: '14px',
+                background: 'var(--bg-elevated)',
+                border: '1px solid var(--border)',
+                borderRadius: 'var(--radius-lg)',
+                padding: '10px 16px',
               }}
             >
               <div>
-                <div style={{ fontSize: '1.25rem', fontWeight: 800, color: '#34D399' }}>
-                  {completedCount} / {totalCount} Done
+                <div style={{ fontSize: 'var(--text-base)', fontWeight: 800, color: 'var(--success)' }}>
+                  {completedCount} / {totalCount} Cleared
                 </div>
-                <div style={{ fontSize: '0.75rem', color: '#9CA3AF' }}>Today's Tasks</div>
+                <div style={{ fontSize: '0.65rem', color: 'var(--text-tertiary)' }}>Daily Missions</div>
               </div>
               <div style={{ width: '80px' }}>
-                <ProgressBar progress={completionPercentage} variant="success" height="8px" />
+                <ProgressBar progress={completionPercentage} variant="success" height="6px" />
               </div>
             </div>
           </div>
@@ -221,16 +215,16 @@ export const Dashboard = () => {
 
         {/* Main Grid Layout (70% Left / 30% Right) */}
         <div className="dashboard-grid">
-          {/* LEFT COLUMN (70%) */}
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
+          {/* LEFT COLUMN */}
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
             {/* Task Section Header */}
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
               <div>
-                <h3 style={{ fontSize: '1.25rem', fontWeight: 700, color: '#F3F4F6' }}>
-                  Today’s Executable Tasks
+                <h3 style={{ fontSize: 'var(--text-base)', fontWeight: 700, color: 'var(--text-primary)' }}>
+                  Active Missions Queue
                 </h3>
-                <p style={{ fontSize: '0.85rem', color: '#9CA3AF' }}>
-                  Ordered by priority and time commitment
+                <p style={{ fontSize: 'var(--text-xs)', color: 'var(--text-tertiary)' }}>
+                  Prioritized execution queue based on target tech role
                 </p>
               </div>
 
@@ -241,46 +235,46 @@ export const Dashboard = () => {
                   leftIcon={Play}
                   onClick={scrollToFirstPending}
                 >
-                  Continue Learning
+                  Focus Active Mission
                 </Button>
               )}
             </div>
 
             {/* Loading Skeleton State */}
             {isInitialLoading ? (
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
-                <Skeleton height="110px" borderRadius="20px" />
-                <Skeleton height="110px" borderRadius="20px" />
-                <Skeleton height="110px" borderRadius="20px" />
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
+                <Skeleton height="100px" borderRadius="16px" />
+                <Skeleton height="100px" borderRadius="16px" />
+                <Skeleton height="100px" borderRadius="16px" />
               </div>
             ) : isTasksError ? (
-              <Card padding="32px">
+              <Card padding="28px" accent>
                 <div style={{ textAlign: 'center' }}>
-                  <p style={{ color: '#F87171', marginBottom: '16px' }}>
-                    {tasksError?.response?.data?.detail || 'Failed to load today’s tasks.'}
+                  <p style={{ color: 'var(--text-danger)', marginBottom: '14px', fontSize: 'var(--text-sm)' }}>
+                    {tasksError?.response?.data?.detail || 'Failed to load today’s missions.'}
                   </p>
-                  <Button variant="outline" leftIcon={RotateCcw} onClick={() => refetchTasks()}>
-                    Retry Fetch
+                  <Button variant="secondary" leftIcon={RotateCcw} onClick={() => refetchTasks()}>
+                    Retry Connection
                   </Button>
                 </div>
               </Card>
             ) : sortedTasks.length === 0 ? (
-              <Card padding="36px">
+              <Card padding="32px" accent>
                 <div style={{ textAlign: 'center' }}>
-                  <Clock size={40} color="#22D3EE" style={{ margin: '0 auto 12px' }} />
-                  <h4 style={{ fontSize: '1.1rem', fontWeight: 700, color: '#F3F4F6' }}>
-                    Generating today’s plan...
+                  <Clock size={36} color="var(--accent)" style={{ margin: '0 auto 12px' }} />
+                  <h4 style={{ fontSize: 'var(--text-md)', fontWeight: 700, color: 'var(--text-primary)' }}>
+                    Generating today’s campaign plan...
                   </h4>
-                  <p style={{ fontSize: '0.9rem', color: '#9CA3AF', marginTop: '6px', marginBottom: '20px' }}>
-                    Your customized tasks are being constructed from your active roadmap.
+                  <p style={{ fontSize: 'var(--text-xs)', color: 'var(--text-tertiary)', marginTop: '4px', marginBottom: '18px' }}>
+                    Your custom daily missions are being constructed from your active campaign.
                   </p>
                   <Button variant="primary" leftIcon={RotateCcw} onClick={() => refetchTasks()}>
-                    Fetch Today's Plan
+                    Sync Today's Plan
                   </Button>
                 </div>
               </Card>
             ) : (
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
                 <AnimatePresence>
                   {sortedTasks.map((task) => (
                     <TaskCard
@@ -296,23 +290,22 @@ export const Dashboard = () => {
                 {/* Day Completed Banner */}
                 {completedCount === totalCount && totalCount > 0 && (
                   <motion.div
-                    initial={{ opacity: 0, scale: 0.95 }}
+                    initial={{ opacity: 0, scale: 0.96 }}
                     animate={{ opacity: 1, scale: 1 }}
                     style={{
-                      background: 'rgba(52, 211, 153, 0.12)',
-                      border: '1.5px solid #34D399',
-                      borderRadius: '20px',
-                      padding: '24px',
+                      background: 'var(--success-dim)',
+                      border: '1px solid var(--success-border)',
+                      borderRadius: 'var(--radius-xl)',
+                      padding: '20px',
                       textAlign: 'center',
-                      boxShadow: '0 0 25px rgba(52, 211, 153, 0.25)',
                     }}
                   >
-                    <CheckCircle2 size={36} color="#34D399" style={{ margin: '0 auto 8px' }} />
-                    <h4 style={{ fontSize: '1.2rem', fontWeight: 800, color: '#F3F4F6' }}>
-                      All Tasks Completed For Today! 🎉
+                    <CheckCircle2 size={32} color="var(--success)" style={{ margin: '0 auto 8px' }} />
+                    <h4 style={{ fontSize: 'var(--text-md)', fontWeight: 800, color: 'var(--text-primary)' }}>
+                      All Daily Missions Cleared! 🔥
                     </h4>
-                    <p style={{ fontSize: '0.9rem', color: '#9CA3AF', marginTop: '4px' }}>
-                      Great work! Come back tomorrow to keep your streak burning strong.
+                    <p style={{ fontSize: 'var(--text-xs)', color: 'var(--text-secondary)', marginTop: '2px' }}>
+                      Outstanding work warrior. Return tomorrow to keep your flame streak burning strong.
                     </p>
                   </motion.div>
                 )}
@@ -320,21 +313,15 @@ export const Dashboard = () => {
             )}
           </div>
 
-          {/* RIGHT COLUMN (30%) */}
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
-            {/* Streak Widget */}
+          {/* RIGHT COLUMN */}
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
             <StreakWidget streak={summaryData?.streak} />
-
-            {/* XP Level Widget */}
             <XpWidget xpData={summaryData?.xp} />
-
-            {/* Roadmap Phase Widget */}
             <RoadmapPhaseWidget roadmap={roadmapData} />
           </div>
         </div>
       </div>
 
-      {/* Confetti Celebration Modal */}
       <CelebrationModal
         isOpen={showCelebration}
         onClose={() => setShowCelebration(false)}
@@ -342,12 +329,11 @@ export const Dashboard = () => {
         xpEarned={sortedTasks.reduce((acc, t) => acc + (t.status === 'done' ? t.xp_value : 0), 0)}
       />
 
-      {/* Grid CSS for 70/30 layout */}
       <style>{`
         .dashboard-grid {
           display: grid;
-          grid-template-columns: 1fr 340px;
-          gap: 28px;
+          grid-template-columns: 1fr 320px;
+          gap: 24px;
         }
         @media (max-width: 992px) {
           .dashboard-grid {

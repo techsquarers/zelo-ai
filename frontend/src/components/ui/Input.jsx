@@ -1,5 +1,9 @@
-import React from 'react';
+import React, { useId } from 'react';
 
+/**
+ * Input — Zilo-AI Warrior Design System
+ * X/Grok form density: clear labels, strong focus rings, compact height.
+ */
 export const Input = ({
   label,
   error,
@@ -10,14 +14,23 @@ export const Input = ({
   type = 'text',
   ...props
 }) => {
-  const inputId = id || (label ? label.toLowerCase().replace(/\s+/g, '-') : undefined);
+  const generatedId = useId();
+  const inputId = id || generatedId;
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: '6px', width: '100%' }} className={className}>
+    <div
+      style={{ display: 'flex', flexDirection: 'column', gap: '5px', width: '100%' }}
+      className={className}
+    >
       {label && (
         <label
           htmlFor={inputId}
-          style={{ fontSize: '0.875rem', fontWeight: 500, color: '#D1D5DB' }}
+          style={{
+            fontSize: 'var(--text-sm)',
+            fontWeight: 600,
+            color: 'var(--text-secondary)',
+            letterSpacing: '-0.01em',
+          }}
         >
           {label}
         </label>
@@ -28,14 +41,14 @@ export const Input = ({
           <div
             style={{
               position: 'absolute',
-              left: '12px',
-              color: '#9CA3AF',
+              left: '11px',
+              color: 'var(--text-tertiary)',
               display: 'flex',
               alignItems: 'center',
               pointerEvents: 'none',
             }}
           >
-            <Icon size={18} />
+            <Icon size={16} />
           </div>
         )}
 
@@ -44,34 +57,42 @@ export const Input = ({
           type={type}
           style={{
             width: '100%',
-            padding: Icon ? '10px 14px 10px 40px' : '10px 14px',
-            background: 'rgba(15, 20, 28, 0.8)',
-            border: error ? '1px solid #F87171' : '1px solid rgba(255, 255, 255, 0.1)',
-            borderRadius: '12px',
-            color: '#F3F4F6',
-            fontSize: '0.95rem',
-            transition: 'border-color 0.2s ease, box-shadow 0.2s ease',
+            padding: Icon ? '10px 12px 10px 36px' : '10px 12px',
+            background: 'var(--bg-elevated)',
+            border: error
+              ? '1px solid var(--danger)'
+              : '1px solid var(--border)',
+            borderRadius: 'var(--radius-lg)',
+            color: 'var(--text-primary)',
+            fontSize: 'var(--text-base)',
+            letterSpacing: '-0.01em',
+            transition: `border-color var(--t-base), box-shadow var(--t-base)`,
+            outline: 'none',
           }}
           onFocus={(e) => {
-            if (!error) {
-              e.target.style.borderColor = 'rgba(34, 211, 238, 0.5)';
-              e.target.style.boxShadow = '0 0 0 3px rgba(34, 211, 238, 0.15)';
-            }
+            e.target.style.borderColor = error
+              ? 'var(--danger)'
+              : 'var(--accent-border)';
+            e.target.style.boxShadow = error
+              ? '0 0 0 3px var(--danger-dim)'
+              : '0 0 0 3px var(--accent-dim)';
           }}
           onBlur={(e) => {
-            if (!error) {
-              e.target.style.borderColor = 'rgba(255, 255, 255, 0.1)';
-              e.target.style.boxShadow = 'none';
-            }
+            e.target.style.borderColor = error ? 'var(--danger)' : 'var(--border)';
+            e.target.style.boxShadow = 'none';
           }}
           {...props}
         />
       </div>
 
       {error ? (
-        <span style={{ fontSize: '0.8rem', color: '#F87171' }}>{error}</span>
+        <span style={{ fontSize: 'var(--text-xs)', color: 'var(--text-danger)', fontWeight: 500 }}>
+          {error}
+        </span>
       ) : helperText ? (
-        <span style={{ fontSize: '0.8rem', color: '#6B7280' }}>{helperText}</span>
+        <span style={{ fontSize: 'var(--text-xs)', color: 'var(--text-tertiary)' }}>
+          {helperText}
+        </span>
       ) : null}
     </div>
   );

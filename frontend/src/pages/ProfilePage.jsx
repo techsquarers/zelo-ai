@@ -4,17 +4,14 @@ import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import {
   User,
-  Mail,
+  Shield,
+  Save,
+  LogOut,
   Flame,
   Zap,
   ShieldCheck,
-  Save,
-  LogOut,
-  Sparkles,
-  BookOpen,
   Video,
-  Rocket,
-  Check,
+  BookOpen,
 } from 'lucide-react';
 import { AppShell } from '../components/layout/AppShell';
 import { Card } from '../components/ui/Card';
@@ -61,7 +58,7 @@ export const ProfilePage = () => {
   const updateMutation = useMutation({
     mutationFn: (data) => updateProfileApi(data),
     onSuccess: () => {
-      showToast('Profile updated successfully!', 'success');
+      showToast('Warrior parameters updated!', 'success');
       queryClient.invalidateQueries({ queryKey: ['userProfile'] });
     },
     onError: (err) => {
@@ -113,273 +110,225 @@ export const ProfilePage = () => {
   const freezes = summary?.streak?.freezes_remaining ?? 1;
 
   return (
-    <AppShell title="My Profile & Settings">
+    <AppShell title="Profile & Settings">
       <div style={{ maxWidth: '900px', margin: '0 auto', display: 'flex', flexDirection: 'column', gap: '28px' }}>
-        {/* Profile Stats Header Card */}
-        <Card padding="28px" glow glowColor="cyan">
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '20px' }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
+        {/* Profile Header Card */}
+        <Card padding="24px" glow glowColor="accent" accent>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '16px' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '14px' }}>
               <div
                 style={{
-                  width: '56px',
-                  height: '56px',
-                  borderRadius: '20px',
-                  background: 'linear-gradient(135deg, #22D3EE 0%, #8B5CF6 100%)',
+                  width: '48px',
+                  height: '48px',
+                  borderRadius: 'var(--radius-lg)',
+                  background: 'var(--accent)',
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
+                  boxShadow: '0 0 16px var(--accent-glow)',
                 }}
               >
-                <User size={32} color="#0B0F14" />
+                <Shield size={24} color="#0C0E11" strokeWidth={2.5} />
               </div>
               <div>
-                <h1 style={{ fontSize: '1.6rem', fontWeight: 800, color: '#F3F4F6', letterSpacing: '-0.02em' }}>
+                <h1 style={{ fontSize: 'var(--text-lg)', fontWeight: 800, color: 'var(--text-primary)', letterSpacing: '-0.02em', margin: 0 }}>
                   {user?.email || 'Engineering Student'}
                 </h1>
-                <p style={{ fontSize: '0.85rem', color: '#9CA3AF', marginTop: '2px' }}>
-                  Student Member • Zilo-AI Workspace
+                <p style={{ fontSize: 'var(--text-xs)', color: 'var(--text-tertiary)', marginTop: '2px' }}>
+                  Student Member · Zilo-AI Terminal
                 </p>
               </div>
             </div>
 
-            <Button variant="danger" leftIcon={LogOut} onClick={handleLogout}>
+            <Button variant="danger" size="sm" leftIcon={LogOut} onClick={handleLogout}>
               Sign Out
             </Button>
           </div>
 
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '12px', marginTop: '24px' }}>
-            <div style={{ background: 'rgba(255, 255, 255, 0.03)', padding: '12px', borderRadius: '14px', textAlign: 'center' }}>
-              <div style={{ color: '#F97316', fontWeight: 800, fontSize: '1.2rem', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '4px' }}>
-                <Flame size={18} fill="#F97316" /> {streakCount} Days
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '10px', marginTop: '20px' }}>
+            <div style={{ background: 'var(--bg-elevated)', border: '1px solid var(--border)', borderRadius: 'var(--radius-md)', padding: '10px 12px', display: 'flex', alignItems: 'center', gap: '8px' }}>
+              <Flame size={16} color="var(--streak)" fill="var(--streak)" />
+              <div>
+                <div style={{ fontSize: 'var(--text-sm)', fontWeight: 700, color: 'var(--streak)' }}>{streakCount} Days</div>
+                <div style={{ fontSize: '0.65rem', color: 'var(--text-tertiary)' }}>Flame Streak</div>
               </div>
-              <div style={{ fontSize: '0.75rem', color: '#6B7280' }}>Streak</div>
             </div>
 
-            <div style={{ background: 'rgba(255, 255, 255, 0.03)', padding: '12px', borderRadius: '14px', textAlign: 'center' }}>
-              <div style={{ color: '#34D399', fontWeight: 800, fontSize: '1.2rem', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '4px' }}>
-                <Zap size={18} fill="#34D399" /> Lvl {level} ({totalXp} XP)
+            <div style={{ background: 'var(--bg-elevated)', border: '1px solid var(--border)', borderRadius: 'var(--radius-md)', padding: '10px 12px', display: 'flex', alignItems: 'center', gap: '8px' }}>
+              <Zap size={16} color="var(--xp)" />
+              <div>
+                <div style={{ fontSize: 'var(--text-sm)', fontWeight: 700, color: 'var(--xp)' }}>Rank {level}</div>
+                <div style={{ fontSize: '0.65rem', color: 'var(--text-tertiary)' }}>{totalXp} Total XP</div>
               </div>
-              <div style={{ fontSize: '0.75rem', color: '#6B7280' }}>Level</div>
             </div>
 
-            <div style={{ background: 'rgba(255, 255, 255, 0.03)', padding: '12px', borderRadius: '14px', textAlign: 'center' }}>
-              <div style={{ color: '#22D3EE', fontWeight: 800, fontSize: '1.2rem', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '4px' }}>
-                <ShieldCheck size={18} /> {freezes} Left
+            <div style={{ background: 'var(--bg-elevated)', border: '1px solid var(--border)', borderRadius: 'var(--radius-md)', padding: '10px 12px', display: 'flex', alignItems: 'center', gap: '8px' }}>
+              <ShieldCheck size={16} color="var(--accent)" />
+              <div>
+                <div style={{ fontSize: 'var(--text-sm)', fontWeight: 700, color: 'var(--accent)' }}>{freezes} Shield</div>
+                <div style={{ fontSize: '0.65rem', color: 'var(--text-tertiary)' }}>Discipline Freeze</div>
               </div>
-              <div style={{ fontSize: '0.75rem', color: '#6B7280' }}>Freezes</div>
             </div>
           </div>
         </Card>
 
+        {/* Settings Form */}
         {isLoading ? (
-          <Skeleton height="300px" borderRadius="24px" />
+          <Skeleton height="320px" borderRadius="16px" />
         ) : (
-          /* Profile Edit Form */
           <form onSubmit={handleSave}>
-            <Card padding="32px">
-              <h3 style={{ fontSize: '1.25rem', fontWeight: 700, color: '#F3F4F6', marginBottom: '24px' }}>
-                Edit Career Preferences
+            <Card padding="28px" accent style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
+              <h3 style={{ fontSize: 'var(--text-md)', fontWeight: 800, color: 'var(--text-primary)', margin: 0 }}>
+                Campaign Parameters
               </h3>
 
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
-                {/* Year & Branch */}
-                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px' }}>
-                  <div>
-                    <label style={{ display: 'block', fontSize: '0.85rem', fontWeight: 600, color: '#D1D5DB', marginBottom: '8px' }}>
-                      Current Year
-                    </label>
-                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '8px' }}>
-                      {[1, 2, 3, 4].map((y) => (
-                        <div
-                          key={y}
-                          onClick={() => setYear(y)}
-                          style={{
-                            padding: '10px',
-                            textAlign: 'center',
-                            borderRadius: '12px',
-                            fontWeight: 700,
-                            cursor: 'pointer',
-                            background: year === y ? 'rgba(139, 92, 246, 0.2)' : 'rgba(255, 255, 255, 0.04)',
-                            border: year === y ? '1px solid #8B5CF6' : '1px solid rgba(255, 255, 255, 0.08)',
-                            color: year === y ? '#C084FC' : '#F3F4F6',
-                          }}
-                        >
-                          {y}
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-
-                  <div>
-                    <label style={{ display: 'block', fontSize: '0.85rem', fontWeight: 600, color: '#D1D5DB', marginBottom: '8px' }}>
-                      Engineering Branch
-                    </label>
-                    <select
-                      value={branch}
-                      onChange={(e) => setBranch(e.target.value)}
-                      style={{
-                        width: '100%',
-                        padding: '10px 14px',
-                        background: 'rgba(15, 20, 28, 0.8)',
-                        border: '1px solid rgba(255, 255, 255, 0.1)',
-                        borderRadius: '12px',
-                        color: '#F3F4F6',
-                        fontSize: '0.95rem',
-                      }}
-                    >
-                      {branches.map((b) => (
-                        <option key={b} value={b} style={{ background: '#0F141C' }}>
-                          {b}
-                        </option>
-                      ))}
-                    </select>
-                  </div>
+              {/* Roles */}
+              <div>
+                <label style={{ display: 'block', fontSize: 'var(--text-xs)', fontWeight: 700, color: 'var(--text-secondary)', marginBottom: '8px' }}>
+                  Target Roles
+                </label>
+                <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px' }}>
+                  {rolesOptions.map((r) => {
+                    const isSel = targetRoles.includes(r);
+                    return (
+                      <Badge
+                        key={r}
+                        variant={isSel ? 'cyan' : 'muted'}
+                        onClick={() => toggleTargetRole(r)}
+                        active={isSel}
+                      >
+                        {r}
+                      </Badge>
+                    );
+                  })}
                 </div>
+              </div>
 
-                {/* Target Roles */}
+              {/* Year & Branch */}
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}>
                 <div>
-                  <label style={{ display: 'block', fontSize: '0.85rem', fontWeight: 600, color: '#D1D5DB', marginBottom: '8px' }}>
-                    Target Roles
+                  <label style={{ display: 'block', fontSize: 'var(--text-xs)', fontWeight: 700, color: 'var(--text-secondary)', marginBottom: '6px' }}>
+                    Year of Study
                   </label>
-                  <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px' }}>
-                    {rolesOptions.map((role) => {
-                      const selected = targetRoles.includes(role);
-                      return (
-                        <Badge
-                          key={role}
-                          variant={selected ? 'cyan' : 'muted'}
-                          active={selected}
-                          onClick={() => toggleTargetRole(role)}
-                        >
-                          {role}
-                        </Badge>
-                      );
-                    })}
-                  </div>
+                  <select
+                    value={year}
+                    onChange={(e) => setYear(Number(e.target.value))}
+                    style={{
+                      width: '100%',
+                      padding: '8px 12px',
+                      borderRadius: 'var(--radius-md)',
+                      background: 'var(--bg-elevated)',
+                      border: '1px solid var(--border)',
+                      color: 'var(--text-primary)',
+                      fontSize: 'var(--text-sm)',
+                    }}
+                  >
+                    {[1, 2, 3, 4].map((y) => (
+                      <option key={y} value={y} style={{ background: '#111418' }}>
+                        Year {y}
+                      </option>
+                    ))}
+                  </select>
                 </div>
 
-                {/* Daily Hours Slider */}
                 <div>
-                  <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.85rem', marginBottom: '6px' }}>
-                    <span style={{ fontWeight: 600, color: '#D1D5DB' }}>Daily Commitment</span>
-                    <span style={{ color: '#22D3EE', fontWeight: 700 }}>{dailyHours} Hours / Day</span>
-                  </div>
+                  <label style={{ display: 'block', fontSize: 'var(--text-xs)', fontWeight: 700, color: 'var(--text-secondary)', marginBottom: '6px' }}>
+                    Engineering Branch
+                  </label>
+                  <select
+                    value={branch}
+                    onChange={(e) => setBranch(e.target.value)}
+                    style={{
+                      width: '100%',
+                      padding: '8px 12px',
+                      borderRadius: 'var(--radius-md)',
+                      background: 'var(--bg-elevated)',
+                      border: '1px solid var(--border)',
+                      color: 'var(--text-primary)',
+                      fontSize: 'var(--text-sm)',
+                    }}
+                  >
+                    {branches.map((b) => (
+                      <option key={b} value={b} style={{ background: '#111418' }}>
+                        {b}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+              </div>
+
+              {/* Daily Hours & Style */}
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}>
+                <div>
+                  <label style={{ display: 'block', fontSize: 'var(--text-xs)', fontWeight: 700, color: 'var(--text-secondary)', marginBottom: '6px' }}>
+                    Daily Execution Time ({dailyHours} hours)
+                  </label>
                   <input
                     type="range"
-                    min="1"
-                    max="8"
+                    min={1}
+                    max={8}
                     value={dailyHours}
                     onChange={(e) => setDailyHours(e.target.value)}
-                    style={{ width: '100%', accentColor: '#22D3EE', cursor: 'pointer' }}
                   />
                 </div>
 
-                {/* Preferred Learning Style */}
                 <div>
-                  <label style={{ display: 'block', fontSize: '0.85rem', fontWeight: 600, color: '#D1D5DB', marginBottom: '8px' }}>
-                    Preferred Learning Style
+                  <label style={{ display: 'block', fontSize: 'var(--text-xs)', fontWeight: 700, color: 'var(--text-secondary)', marginBottom: '6px' }}>
+                    Resource Format Preference
                   </label>
-                  <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '10px' }}>
-                    {[
-                      { id: 'video', label: 'Video Lessons', icon: Video },
-                      { id: 'reading', label: 'Reading & Docs', icon: BookOpen },
-                      { id: 'projects', label: 'Projects', icon: Rocket },
-                    ].map((style) => {
-                      const Icon = style.icon;
-                      const active = preferredStyle === style.id;
-                      return (
-                        <div
-                          key={style.id}
-                          onClick={() => setPreferredStyle(style.id)}
-                          style={{
-                            background: active ? 'rgba(52, 211, 153, 0.15)' : 'rgba(255, 255, 255, 0.04)',
-                            border: active ? '1px solid #34D399' : '1px solid rgba(255, 255, 255, 0.08)',
-                            borderRadius: '12px',
-                            padding: '12px',
-                            textAlign: 'center',
-                            cursor: 'pointer',
-                            display: 'flex',
-                            alignItems: 'center',
-                            justifyContent: 'center',
-                            gap: '8px',
-                            fontSize: '0.85rem',
-                            fontWeight: 600,
-                            color: active ? '#34D399' : '#D1D5DB',
-                          }}
-                        >
-                          <Icon size={16} />
-                          <span>{style.label}</span>
-                        </div>
-                      );
-                    })}
+                  <div style={{ display: 'flex', gap: '8px' }}>
+                    <Badge
+                      variant={preferredStyle === 'video' ? 'cyan' : 'muted'}
+                      onClick={() => setPreferredStyle('video')}
+                      icon={Video}
+                      active={preferredStyle === 'video'}
+                    >
+                      Video
+                    </Badge>
+                    <Badge
+                      variant={preferredStyle === 'text' ? 'cyan' : 'muted'}
+                      onClick={() => setPreferredStyle('text')}
+                      icon={BookOpen}
+                      active={preferredStyle === 'text'}
+                    >
+                      Text
+                    </Badge>
                   </div>
                 </div>
+              </div>
 
-                {/* Skill Levels */}
-                <div>
-                  <label style={{ display: 'block', fontSize: '0.85rem', fontWeight: 600, color: '#D1D5DB', marginBottom: '12px' }}>
-                    Skill Levels (1-5)
-                  </label>
-                  <div style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
-                    {[
-                      { key: 'dsa', name: 'DSA & Algorithms' },
-                      { key: 'system_design', name: 'System Design' },
-                      { key: 'python', name: 'Python / Code Proficiency' },
-                    ].map((skill) => (
-                      <div key={skill.key}>
-                        <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.8rem', marginBottom: '4px' }}>
-                          <span style={{ color: '#D1D5DB' }}>{skill.name}</span>
-                          <span style={{ color: '#8B5CF6', fontWeight: 700 }}>Level {skillLevels[skill.key] || 1}</span>
-                        </div>
-                        <input
-                          type="range"
-                          min="1"
-                          max="5"
-                          value={skillLevels[skill.key] || 1}
-                          onChange={(e) =>
-                            setSkillLevels({ ...skillLevels, [skill.key]: Number(e.target.value) })
-                          }
-                          style={{ width: '100%', accentColor: '#8B5CF6', cursor: 'pointer' }}
-                        />
-                      </div>
-                    ))}
-                  </div>
+              {/* Weak areas */}
+              <div>
+                <label style={{ display: 'block', fontSize: 'var(--text-xs)', fontWeight: 700, color: 'var(--text-secondary)', marginBottom: '8px' }}>
+                  Target Weak Areas & Refinements
+                </label>
+                <div style={{ display: 'flex', flexWrap: 'wrap', gap: '6px' }}>
+                  {weakAreaOptions.map((area) => {
+                    const isSel = weakAreas.includes(area);
+                    return (
+                      <Badge
+                        key={area}
+                        variant={isSel ? 'accent' : 'muted'}
+                        onClick={() => toggleWeakArea(area)}
+                        active={isSel}
+                      >
+                        {area.toUpperCase()}
+                      </Badge>
+                    );
+                  })}
                 </div>
+              </div>
 
-                {/* Weak Areas */}
-                <div>
-                  <label style={{ display: 'block', fontSize: '0.85rem', fontWeight: 600, color: '#D1D5DB', marginBottom: '8px' }}>
-                    Weak Areas to Focus
-                  </label>
-                  <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px' }}>
-                    {weakAreaOptions.map((area) => {
-                      const selected = weakAreas.includes(area);
-                      return (
-                        <Badge
-                          key={area}
-                          variant={selected ? 'streak' : 'muted'}
-                          active={selected}
-                          onClick={() => toggleWeakArea(area)}
-                        >
-                          {area}
-                        </Badge>
-                      );
-                    })}
-                  </div>
-                </div>
-
-                {/* Save Button */}
-                <div style={{ marginTop: '16px', display: 'flex', justifyContent: 'flex-end' }}>
-                  <Button
-                    type="submit"
-                    variant="glow"
-                    size="lg"
-                    leftIcon={Save}
-                    isLoading={updateMutation.isPending}
-                  >
-                    Save Profile Changes
-                  </Button>
-                </div>
+              <div style={{ display: 'flex', justifyContent: 'flex-end', paddingTop: '12px', borderTop: '1px solid var(--border)' }}>
+                <Button
+                  type="submit"
+                  variant="primary"
+                  size="md"
+                  leftIcon={Save}
+                  isLoading={updateMutation.isPending}
+                >
+                  Save Campaign Settings
+                </Button>
               </div>
             </Card>
           </form>

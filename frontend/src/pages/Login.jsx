@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { Mail, Lock, Sparkles, ArrowRight } from 'lucide-react';
+import { Mail, Lock, Shield, ArrowRight, AlertTriangle } from 'lucide-react';
 import { loginApi, getMeApi } from '../api/auth';
 import { getProgressSummaryApi } from '../api/progress';
 import { useAuthStore } from '../store/authStore';
@@ -36,7 +36,6 @@ export const Login = () => {
       const tokenData = await loginApi(email, password);
       const token = tokenData.access_token;
 
-      // Save token temporarily to trigger client headers
       localStorage.setItem('access_token', token);
 
       // 2. Fetch user profile & summary
@@ -44,13 +43,11 @@ export const Login = () => {
 
       setAuth(token, user);
       setSummary(summary);
-      showToast('Welcome back to Zilo-AI!', 'success');
+      showToast('Welcome back warrior!', 'success');
 
-      // 3. Route by rules
+      // 3. Route by profile state
       if (!summary.has_profile) {
         navigate('/onboarding', { replace: true });
-      } else if (!summary.has_roadmap) {
-        navigate('/dashboard', { replace: true }); // ProtectedRoute auto-generates
       } else {
         navigate('/dashboard', { replace: true });
       }
@@ -60,7 +57,7 @@ export const Login = () => {
       if (typeof detail === 'string') {
         setErrorMsg(detail);
       } else if (err.code === 'ERR_NETWORK') {
-        setErrorMsg('Unable to connect to Zilo backend server. Check server connection.');
+        setErrorMsg('Unable to connect to Zilo backend server.');
       } else {
         setErrorMsg('Invalid email or password. Please try again.');
       }
@@ -74,80 +71,86 @@ export const Login = () => {
     <div
       style={{
         minHeight: '100vh',
-        background: '#0B0F14',
+        background: 'var(--bg-base)',
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
         padding: '24px',
         position: 'relative',
+        fontFamily: 'var(--font-ui)',
       }}
     >
-      {/* Radial glow background */}
+      {/* Background Radial Glow */}
       <div
         style={{
           position: 'absolute',
-          top: '30%',
+          top: '35%',
           left: '50%',
           transform: 'translate(-50%, -50%)',
           width: '500px',
           height: '500px',
-          background: 'radial-gradient(circle, rgba(34, 211, 238, 0.12) 0%, rgba(139, 92, 246, 0.08) 50%, rgba(0,0,0,0) 70%)',
+          background: 'radial-gradient(circle, var(--accent-dim) 0%, transparent 70%)',
           pointerEvents: 'none',
         }}
       />
 
       <motion.div
-        initial={{ opacity: 0, scale: 0.95 }}
-        animate={{ opacity: 1, scale: 1 }}
-        transition={{ duration: 0.4 }}
-        style={{ width: '100%', maxWidth: '440px', position: 'relative', zIndex: 10 }}
+        initial={{ opacity: 0, y: 12 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.35 }}
+        style={{ width: '100%', maxWidth: '420px', position: 'relative', zIndex: 10 }}
       >
-        <Card padding="36px">
-          {/* Brand Header */}
-          <div style={{ textAlign: 'center', marginBottom: '32px' }}>
+        <Card padding="32px" accent>
+          {/* Header */}
+          <div style={{ textAlign: 'center', marginBottom: '28px' }}>
             <div
               style={{
-                width: '48px',
-                height: '48px',
-                borderRadius: '14px',
-                background: 'linear-gradient(135deg, #22D3EE 0%, #8B5CF6 100%)',
+                width: '44px',
+                height: '44px',
+                borderRadius: 'var(--radius-lg)',
+                background: 'var(--accent)',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
-                margin: '0 auto 16px',
+                margin: '0 auto 14px',
+                boxShadow: '0 0 18px var(--accent-glow)',
               }}
             >
-              <Sparkles size={26} color="#0B0F14" />
+              <Shield size={24} color="#0C0E11" strokeWidth={2.5} />
             </div>
-            <h2 style={{ fontSize: '1.75rem', fontWeight: 800, color: '#F3F4F6', letterSpacing: '-0.02em' }}>
-              Welcome back
+            <h2 style={{ fontSize: 'var(--text-xl)', fontWeight: 800, color: 'var(--text-primary)', letterSpacing: '-0.02em' }}>
+              Resume Execution
             </h2>
-            <p style={{ fontSize: '0.9rem', color: '#9CA3AF', marginTop: '6px' }}>
-              Sign in to execute your daily tech roadmap
+            <p style={{ fontSize: 'var(--text-xs)', color: 'var(--text-tertiary)', marginTop: '4px' }}>
+              Sign in to access your daily tech missions
             </p>
           </div>
 
           {errorMsg && (
             <div
               style={{
-                background: 'rgba(239, 68, 68, 0.12)',
-                border: '1px solid rgba(239, 68, 68, 0.3)',
-                color: '#F87171',
-                padding: '12px 16px',
-                borderRadius: '12px',
-                fontSize: '0.85rem',
-                marginBottom: '20px',
+                background: 'var(--danger-dim)',
+                border: '1px solid var(--danger-border)',
+                color: 'var(--text-danger)',
+                padding: '10px 14px',
+                borderRadius: 'var(--radius-md)',
+                fontSize: 'var(--text-xs)',
+                marginBottom: '18px',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '8px',
               }}
             >
-              {errorMsg}
+              <AlertTriangle size={15} flexShrink={0} />
+              <span>{errorMsg}</span>
             </div>
           )}
 
-          <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
+          <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
             <Input
               label="Email Address"
               type="email"
-              placeholder="you@example.com"
+              placeholder="warrior@example.com"
               icon={Mail}
               value={email}
               onChange={(e) => setEmail(e.target.value)}
@@ -170,23 +173,23 @@ export const Login = () => {
               size="lg"
               isLoading={isLoading}
               rightIcon={ArrowRight}
-              style={{ marginTop: '8px', width: '100%' }}
+              style={{ marginTop: '6px', width: '100%' }}
             >
-              Sign In
+              Sign In to Terminal
             </Button>
           </form>
 
           <div
             style={{
               textAlign: 'center',
-              marginTop: '24px',
-              fontSize: '0.9rem',
-              color: '#9CA3AF',
+              marginTop: '20px',
+              fontSize: 'var(--text-xs)',
+              color: 'var(--text-secondary)',
             }}
           >
-            Don't have an account?{' '}
-            <Link to="/register" style={{ color: '#22D3EE', fontWeight: 600 }}>
-              Create one now
+            New to Zilo-AI?{' '}
+            <Link to="/register" style={{ color: 'var(--accent)', fontWeight: 700 }}>
+              Initialize Campaign
             </Link>
           </div>
         </Card>

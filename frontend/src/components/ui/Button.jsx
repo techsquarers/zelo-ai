@@ -2,6 +2,55 @@ import React from 'react';
 import { motion } from 'framer-motion';
 import { Loader2 } from 'lucide-react';
 
+const VARIANTS = {
+  primary: {
+    background: 'var(--accent)',
+    color: '#0C0E11',
+    border: '1px solid transparent',
+    fontWeight: 600,
+    boxShadow: '0 0 0 0 var(--accent-glow)',
+    '--hover-bg': 'var(--accent-strong)',
+    '--hover-shadow': '0 4px 16px var(--accent-glow)',
+  },
+  secondary: {
+    background: 'var(--bg-elevated)',
+    color: 'var(--text-primary)',
+    border: '1px solid var(--border)',
+    fontWeight: 500,
+  },
+  outline: {
+    background: 'transparent',
+    color: 'var(--accent)',
+    border: '1px solid var(--accent-border)',
+    fontWeight: 500,
+  },
+  ghost: {
+    background: 'transparent',
+    color: 'var(--text-secondary)',
+    border: '1px solid transparent',
+    fontWeight: 500,
+  },
+  danger: {
+    background: 'var(--danger-dim)',
+    color: 'var(--text-danger)',
+    border: '1px solid var(--danger-border)',
+    fontWeight: 500,
+  },
+  warrior: {
+    background: 'var(--streak-dim)',
+    color: 'var(--streak)',
+    border: '1px solid var(--streak-border)',
+    fontWeight: 600,
+  },
+};
+
+const SIZES = {
+  xs: { padding: '4px 10px',  fontSize: 'var(--text-xs)', borderRadius: 'var(--radius-sm)',  gap: '5px'  },
+  sm: { padding: '6px 12px',  fontSize: 'var(--text-sm)', borderRadius: 'var(--radius-md)',  gap: '6px'  },
+  md: { padding: '9px 16px',  fontSize: 'var(--text-base)',borderRadius: 'var(--radius-lg)', gap: '7px'  },
+  lg: { padding: '12px 22px', fontSize: 'var(--text-md)', borderRadius: 'var(--radius-lg)',  gap: '8px'  },
+};
+
 export const Button = ({
   children,
   variant = 'primary',
@@ -11,94 +60,40 @@ export const Button = ({
   rightIcon: RightIcon,
   className = '',
   disabled,
+  style,
   ...props
 }) => {
-  const getVariantStyles = () => {
-    switch (variant) {
-      case 'primary':
-        return {
-          background: 'linear-gradient(135deg, #22D3EE 0%, #0EA5E9 100%)',
-          color: '#0B0F14',
-          border: 'none',
-          fontWeight: 600,
-          boxShadow: '0 4px 14px rgba(34, 211, 238, 0.3)',
-        };
-      case 'glow':
-        return {
-          background: 'linear-gradient(135deg, #8B5CF6 0%, #6366F1 100%)',
-          color: '#FFFFFF',
-          border: 'none',
-          fontWeight: 600,
-          boxShadow: '0 0 20px rgba(139, 92, 246, 0.4)',
-        };
-      case 'secondary':
-        return {
-          background: 'rgba(255, 255, 255, 0.08)',
-          color: '#F3F4F6',
-          border: '1px solid rgba(255, 255, 255, 0.12)',
-          backdropFilter: 'blur(8px)',
-        };
-      case 'outline':
-        return {
-          background: 'transparent',
-          color: '#22D3EE',
-          border: '1px solid rgba(34, 211, 238, 0.4)',
-        };
-      case 'ghost':
-        return {
-          background: 'transparent',
-          color: '#9CA3AF',
-          border: 'none',
-        };
-      case 'danger':
-        return {
-          background: 'rgba(239, 68, 68, 0.15)',
-          color: '#F87171',
-          border: '1px solid rgba(239, 68, 68, 0.3)',
-        };
-      default:
-        return {};
-    }
-  };
-
-  const getSizeStyles = () => {
-    switch (size) {
-      case 'sm':
-        return { padding: '6px 14px', fontSize: '0.85rem', borderRadius: '10px' };
-      case 'lg':
-        return { padding: '14px 28px', fontSize: '1.05rem', borderRadius: '16px' };
-      case 'md':
-      default:
-        return { padding: '10px 20px', fontSize: '0.95rem', borderRadius: '12px' };
-    }
-  };
+  const vStyle = VARIANTS[variant] || VARIANTS.primary;
+  const sStyle = SIZES[size] || SIZES.md;
+  const isDisabled = disabled || isLoading;
 
   return (
     <motion.button
-      whileHover={{ scale: disabled || isLoading ? 1 : 1.02 }}
-      whileTap={{ scale: disabled || isLoading ? 1 : 0.98 }}
-      disabled={disabled || isLoading}
+      whileHover={!isDisabled ? { scale: 1.01 } : {}}
+      whileTap={!isDisabled ? { scale: 0.98 } : {}}
+      disabled={isDisabled}
       style={{
         display: 'inline-flex',
         alignItems: 'center',
         justifyContent: 'center',
-        gap: '8px',
-        cursor: disabled || isLoading ? 'not-allowed' : 'pointer',
-        opacity: disabled ? 0.6 : 1,
-        transition: 'all 0.2s ease',
-        ...getVariantStyles(),
-        ...getSizeStyles(),
+        gap: sStyle.gap,
+        cursor: isDisabled ? 'not-allowed' : 'pointer',
+        opacity: disabled ? 0.5 : 1,
+        transition: `background var(--t-base), box-shadow var(--t-base), border-color var(--t-base)`,
+        letterSpacing: '-0.01em',
+        ...vStyle,
+        ...sStyle,
+        ...style,
       }}
       className={className}
       {...props}
     >
-      {isLoading ? (
-        <Loader2 size={18} className="spin-icon" style={{ animation: 'spin 1s linear infinite' }} />
-      ) : (
-        LeftIcon && <LeftIcon size={18} />
-      )}
+      {isLoading
+        ? <Loader2 size={15} className="spin-icon" />
+        : LeftIcon && <LeftIcon size={15} />
+      }
       <span>{children}</span>
-      {!isLoading && RightIcon && <RightIcon size={18} />}
+      {!isLoading && RightIcon && <RightIcon size={15} />}
     </motion.button>
   );
 };
