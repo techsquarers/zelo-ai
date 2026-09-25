@@ -29,7 +29,7 @@ export const ProtectedRoute = ({ children }) => {
       }
 
       try {
-        // Init auth user if needed
+        // Init auth user if needed on refresh
         if (!user) {
           await initAuth();
         }
@@ -91,14 +91,14 @@ export const ProtectedRoute = ({ children }) => {
           flexDirection: 'column',
           alignItems: 'center',
           justifyContent: 'center',
-          background: '#0B0F14',
-          color: '#F3F4F6',
+          background: 'var(--bg-base)',
+          color: 'var(--text-primary)',
           gap: '16px',
         }}
       >
-        <Spinner size={36} color="#22D3EE" />
-        <p style={{ color: '#9CA3AF', fontSize: '0.95rem' }}>
-          {isGeneratingRoadmap ? 'Generating your personalized roadmap...' : 'Preparing your workspace...'}
+        <Spinner size={36} color="var(--accent)" />
+        <p style={{ color: 'var(--text-secondary)', fontSize: 'var(--text-sm)', fontWeight: 500 }}>
+          {isGeneratingRoadmap ? 'Generating your personalized roadmap...' : 'Preparing workspace...'}
         </p>
       </div>
     );
