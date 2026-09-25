@@ -3,8 +3,6 @@ import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import {
   Sparkles,
-  MapPin,
-  CheckCircle2,
   Flame,
   Zap,
   ArrowRight,
@@ -13,6 +11,12 @@ import {
   Layers,
   Database,
   Cpu,
+  Shield,
+  CheckCircle2,
+  Map,
+  Target,
+  Crosshair,
+  TrendingUp,
 } from 'lucide-react';
 import { Button } from '../components/ui/Button';
 import { Card } from '../components/ui/Card';
@@ -22,35 +26,38 @@ export const Landing = () => {
   const navigate = useNavigate();
 
   const targetRoles = [
-    { title: 'SDE', icon: Code2 },
-    { title: 'Backend', icon: Terminal },
-    { title: 'Frontend', icon: Layers },
-    { title: 'Full-stack', icon: Sparkles },
-    { title: 'Data', icon: Database },
-    { title: 'DevOps', icon: Cpu },
+    { title: 'SDE Warrior', icon: Code2, tag: 'DSA + Systems' },
+    { title: 'Backend Core', icon: Terminal, tag: 'APIs & Arch' },
+    { title: 'Frontend Craft', icon: Layers, tag: 'UI & Perf' },
+    { title: 'Full-Stack', icon: Sparkles, tag: 'End-to-End' },
+    { title: 'Data Engine', icon: Database, tag: 'Pipelines' },
+    { title: 'DevOps Ops', icon: Cpu, tag: 'Cloud & CI/CD' },
   ];
 
   const features = [
     {
-      icon: MapPin,
-      title: 'Personalized Roadmap',
+      icon: Map,
+      title: 'Campaign Path',
+      subtitle: 'PHASED ROADMAP',
       description:
-        'A structured career path crafted around your year, branch, daily available hours, and target tech role.',
-      color: '#22D3EE',
+        'A battle-tested tech roadmap dynamically generated for your target role, college year, and daily available study hours.',
+      badgeVariant: 'cyan',
     },
     {
-      icon: CheckCircle2,
-      title: 'Daily Executable Tasks',
+      icon: Crosshair,
+      title: 'Daily Missions',
+      subtitle: 'ZERO OVERWHELM',
       description:
-        'No overwhelm. Get handpicked, high-value free video and reading tasks to complete every single day.',
-      color: '#8B5CF6',
+        'No endless tutorial hell. Direct daily executable missions with handpicked resources to complete and gain rank.',
+      badgeVariant: 'accent',
     },
     {
       icon: Flame,
-      title: 'Streaks & XP Gamification',
+      title: 'Flame of Discipline',
+      subtitle: 'STREAKS & RANKS',
       description:
-        'Build unstoppable consistency. Earn XP, maintain daily streaks, and stay motivated like Duolingo.',
-      color: '#F97316',
+        'Level up your XP rank every time you finish tasks. Protect your daily streak flame with discipline freezes.',
+      badgeVariant: 'streak',
     },
   ];
 
@@ -58,25 +65,42 @@ export const Landing = () => {
     <div
       style={{
         minHeight: '100vh',
-        background: '#0B0F14',
-        color: '#F3F4F6',
+        background: 'var(--bg-base)',
+        color: 'var(--text-primary)',
         overflowX: 'hidden',
         position: 'relative',
+        fontFamily: 'var(--font-ui)',
       }}
     >
-      {/* Background Glow Orbs */}
+      {/* Background Blade Ambient Glows */}
       <div
         style={{
           position: 'absolute',
-          top: '-10%',
+          top: '-150px',
           left: '50%',
           transform: 'translateX(-50%)',
-          width: '600px',
-          height: '600px',
-          background: 'radial-gradient(circle, rgba(34, 211, 238, 0.15) 0%, rgba(139, 92, 246, 0.1) 40%, rgba(0, 0, 0, 0) 70%)',
-          filter: 'blur(60px)',
+          width: '700px',
+          height: '500px',
+          background:
+            'radial-gradient(ellipse at top, rgba(56, 189, 248, 0.12) 0%, rgba(249, 115, 22, 0.05) 45%, transparent 70%)',
+          filter: 'blur(80px)',
           pointerEvents: 'none',
           zIndex: 0,
+        }}
+      />
+
+      {/* Grid Pattern overlay */}
+      <div
+        style={{
+          position: 'absolute',
+          inset: 0,
+          backgroundImage:
+            'linear-gradient(to right, rgba(255, 255, 255, 0.02) 1px, transparent 1px), linear-gradient(to bottom, rgba(255, 255, 255, 0.02) 1px, transparent 1px)',
+          backgroundSize: '40px 40px',
+          pointerEvents: 'none',
+          zIndex: 0,
+          maskImage: 'radial-gradient(circle at center, black 40%, transparent 80%)',
+          WebkitMaskImage: 'radial-gradient(circle at center, black 40%, transparent 80%)',
         }}
       />
 
@@ -85,7 +109,7 @@ export const Landing = () => {
         style={{
           maxWidth: '1200px',
           margin: '0 auto',
-          padding: '24px 32px',
+          padding: '20px 32px',
           display: 'flex',
           justifyContent: 'space-between',
           alignItems: 'center',
@@ -93,31 +117,34 @@ export const Landing = () => {
           zIndex: 10,
         }}
       >
-        <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '10px', cursor: 'pointer' }} onClick={() => navigate('/')}>
           <div
             style={{
-              width: '40px',
-              height: '40px',
-              borderRadius: '12px',
-              background: 'linear-gradient(135deg, #22D3EE 0%, #8B5CF6 100%)',
+              width: '36px',
+              height: '36px',
+              borderRadius: 'var(--radius-md)',
+              background: 'var(--accent)',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
+              boxShadow: '0 0 16px var(--accent-glow)',
             }}
           >
-            <Sparkles size={22} color="#0B0F14" />
+            <Shield size={20} color="#0C0E11" strokeWidth={2.5} />
           </div>
-          <span style={{ fontSize: '1.4rem', fontWeight: 800, letterSpacing: '-0.02em' }}>
-            Zilo<span style={{ color: '#22D3EE' }}>.ai</span>
-          </span>
+          <div>
+            <span style={{ fontSize: '1.25rem', fontWeight: 800, letterSpacing: '-0.03em', color: 'var(--text-primary)' }}>
+              ZILO<span style={{ color: 'var(--accent)' }}>.AI</span>
+            </span>
+          </div>
         </div>
 
-        <div style={{ display: 'flex', gap: '16px' }}>
-          <Button variant="ghost" onClick={() => navigate('/login')}>
-            Login
+        <div style={{ display: 'flex', gap: '12px', alignItems: 'center' }}>
+          <Button variant="ghost" size="sm" onClick={() => navigate('/login')}>
+            Sign In
           </Button>
-          <Button variant="primary" onClick={() => navigate('/register')} rightIcon={ArrowRight}>
-            Get Started
+          <Button variant="primary" size="sm" onClick={() => navigate('/register')} rightIcon={ArrowRight}>
+            Initialize Campaign
           </Button>
         </div>
       </header>
@@ -125,95 +152,199 @@ export const Landing = () => {
       {/* Hero Section */}
       <section
         style={{
-          maxWidth: '1000px',
-          margin: '60px auto 80px',
-          padding: '0 32px',
+          maxWidth: '960px',
+          margin: '50px auto 70px',
+          padding: '0 24px',
           textAlign: 'center',
           position: 'relative',
           zIndex: 10,
         }}
       >
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
+          initial={{ opacity: 0, y: 16 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6 }}
+          transition={{ duration: 0.5 }}
         >
-          <Badge variant="violet" icon={Sparkles} className="mb-4">
-            AI-Powered Career Execution
+          <Badge variant="streak" icon={Flame} style={{ marginBottom: '20px' }}>
+            DAILY EXECUTION SYSTEM FOR ENGINEERING STUDENTS
           </Badge>
 
           <h1
             style={{
-              fontSize: '3.5rem',
+              fontSize: '3.4rem',
               fontWeight: 800,
-              lineHeight: 1.15,
+              lineHeight: 1.12,
               letterSpacing: '-0.03em',
-              margin: '24px 0',
+              color: 'var(--text-primary)',
+              margin: '0 0 20px',
             }}
           >
-            Your personalized tech roadmap +{' '}
-            <span className="text-gradient-cyan">daily execution system</span>
+            Master your tech path with{' '}
+            <span style={{ color: 'var(--accent)', textShadow: '0 0 24px var(--accent-glow)' }}>
+              relentless daily discipline.
+            </span>
           </h1>
 
           <p
             style={{
-              fontSize: '1.2rem',
-              color: '#9CA3AF',
-              maxWidth: '720px',
-              margin: '0 auto 40px',
+              fontSize: '1.125rem',
+              color: 'var(--text-secondary)',
+              maxWidth: '680px',
+              margin: '0 auto 36px',
               lineHeight: 1.6,
             }}
           >
-            Stop last-minute placement panic. Get a daily plan, streaks, and a career path built
-            around your skills and available time.
+            No last-minute placement panic. Zilo-AI turns your target engineering role into daily actionable missions, tracked streaks, and rank progression.
           </p>
 
-          <div style={{ display: 'flex', gap: '16px', justifyContent: 'center' }}>
+          <div style={{ display: 'flex', gap: '14px', justifyContent: 'center', flexWrap: 'wrap' }}>
             <Button
               variant="primary"
               size="lg"
               onClick={() => navigate('/register')}
               rightIcon={ArrowRight}
             >
-              Start Free Today
+              Start Free Campaign
             </Button>
             <Button variant="secondary" size="lg" onClick={() => navigate('/login')}>
-              Log Into Account
+              Resume Mission
             </Button>
           </div>
+        </motion.div>
+      </section>
+
+      {/* Interactive Mock Dashboard Snippet */}
+      <section
+        style={{
+          maxWidth: '900px',
+          margin: '0 auto 80px',
+          padding: '0 24px',
+          position: 'relative',
+          zIndex: 10,
+        }}
+      >
+        <motion.div
+          initial={{ opacity: 0, y: 24 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, delay: 0.2 }}
+        >
+          <Card padding="24px" accent style={{ background: 'var(--bg-surface)' }}>
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '16px', borderBottom: '1px solid var(--border)', paddingBottom: '12px' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                <div style={{ width: '8px', height: '8px', borderRadius: '50%', background: 'var(--accent)' }} />
+                <span style={{ fontSize: 'var(--text-xs)', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.06em', color: 'var(--text-secondary)' }}>
+                  DAILY MISSION TERMINAL
+                </span>
+              </div>
+              <div style={{ display: 'flex', gap: '12px', alignItems: 'center' }}>
+                <Badge variant="streak" icon={Flame}>7d Streak</Badge>
+                <Badge variant="xp" icon={Zap}>Rank 3 SDE</Badge>
+              </div>
+            </div>
+
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+              <div style={{
+                background: 'var(--bg-elevated)',
+                border: '1px solid var(--border)',
+                borderRadius: 'var(--radius-lg)',
+                padding: '14px 16px',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'space-between',
+              }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+                  <CheckCircle2 size={18} color="var(--success)" />
+                  <div>
+                    <div style={{ fontSize: 'var(--text-sm)', fontWeight: 600, color: 'var(--text-secondary)', textDecoration: 'line-through' }}>
+                      Binary Search & Two Pointers Fundamentals
+                    </div>
+                    <div style={{ fontSize: 'var(--text-xs)', color: 'var(--text-tertiary)' }}>DSA Core · 45 mins</div>
+                  </div>
+                </div>
+                <Badge variant="success">+50 XP</Badge>
+              </div>
+
+              <div style={{
+                background: 'var(--bg-elevated)',
+                border: '1px solid var(--accent-border)',
+                borderRadius: 'var(--radius-lg)',
+                padding: '14px 16px',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'space-between',
+                boxShadow: '0 0 16px var(--accent-dim)',
+              }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+                  <div style={{ width: '18px', height: '18px', borderRadius: '50%', border: '2px solid var(--accent)' }} />
+                  <div>
+                    <div style={{ fontSize: 'var(--text-sm)', fontWeight: 700, color: 'var(--text-primary)' }}>
+                      Build REST API Middleware in Express & Node
+                    </div>
+                    <div style={{ fontSize: 'var(--text-xs)', color: 'var(--accent)' }}>Active Mission · 60 mins</div>
+                  </div>
+                </div>
+                <Badge variant="cyan">+60 XP</Badge>
+              </div>
+            </div>
+          </Card>
         </motion.div>
       </section>
 
       {/* Target Roles Banner */}
       <section
         style={{
-          maxWidth: '1100px',
-          margin: '0 auto 90px',
-          padding: '0 32px',
+          maxWidth: '1000px',
+          margin: '0 auto 80px',
+          padding: '0 24px',
           position: 'relative',
           zIndex: 10,
         }}
       >
-        <div style={{ textAlign: 'center', marginBottom: '24px' }}>
-          <p style={{ fontSize: '0.85rem', textTransform: 'uppercase', letterSpacing: '0.1em', color: '#6B7280', fontWeight: 600 }}>
-            tailored for target engineering roles
+        <div style={{ textAlign: 'center', marginBottom: '20px' }}>
+          <p style={{ fontSize: 'var(--text-xs)', textTransform: 'uppercase', letterSpacing: '0.1em', color: 'var(--text-tertiary)', fontWeight: 700 }}>
+            TAILORED ROADMAPS FOR TARGET CAREER RANKS
           </p>
         </div>
 
         <div
           style={{
-            display: 'flex',
-            flexWrap: 'wrap',
+            display: 'grid',
+            gridTemplateColumns: 'repeat(auto-fit, minmax(150px, 1fr))',
             gap: '12px',
-            justifyContent: 'center',
           }}
         >
           {targetRoles.map((role) => {
             const Icon = role.icon;
             return (
-              <Badge key={role.title} variant="muted" icon={Icon}>
-                <span style={{ fontSize: '0.95rem', padding: '4px 6px' }}>{role.title}</span>
-              </Badge>
+              <div
+                key={role.title}
+                style={{
+                  background: 'var(--bg-surface)',
+                  border: '1px solid var(--border)',
+                  borderRadius: 'var(--radius-lg)',
+                  padding: '14px',
+                  display: 'flex',
+                  flexDirection: 'column',
+                  alignItems: 'center',
+                  gap: '8px',
+                  textAlign: 'center',
+                  transition: 'all var(--t-fast)',
+                }}
+              >
+                <div style={{
+                  width: '32px',
+                  height: '32px',
+                  borderRadius: 'var(--radius-md)',
+                  background: 'var(--accent-dim)',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                }}>
+                  <Icon size={16} color="var(--accent)" />
+                </div>
+                <span style={{ fontSize: 'var(--text-xs)', fontWeight: 700, color: 'var(--text-primary)' }}>{role.title}</span>
+                <span style={{ fontSize: '0.65rem', color: 'var(--text-tertiary)' }}>{role.tag}</span>
+              </div>
             );
           })}
         </div>
@@ -222,9 +353,9 @@ export const Landing = () => {
       {/* 3 Core Feature Cards */}
       <section
         style={{
-          maxWidth: '1200px',
-          margin: '0 auto 120px',
-          padding: '0 32px',
+          maxWidth: '1100px',
+          margin: '0 auto 100px',
+          padding: '0 24px',
           position: 'relative',
           zIndex: 10,
         }}
@@ -232,8 +363,8 @@ export const Landing = () => {
         <div
           style={{
             display: 'grid',
-            gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))',
-            gap: '24px',
+            gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))',
+            gap: '20px',
           }}
         >
           {features.map((feat, idx) => {
@@ -241,30 +372,39 @@ export const Landing = () => {
             return (
               <motion.div
                 key={feat.title}
-                initial={{ opacity: 0, y: 20 }}
+                initial={{ opacity: 0, y: 16 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.5, delay: idx * 0.15 }}
+                transition={{ duration: 0.4, delay: idx * 0.1 }}
               >
-                <Card hoverable padding="32px">
+                <Card hoverable padding="24px" style={{ height: '100%' }}>
                   <div
                     style={{
-                      width: '48px',
-                      height: '48px',
-                      borderRadius: '14px',
-                      background: `${feat.color}15`,
-                      border: `1px solid ${feat.color}30`,
                       display: 'flex',
                       alignItems: 'center',
-                      justifyContent: 'center',
-                      marginBottom: '20px',
+                      justifyContent: 'space-between',
+                      marginBottom: '16px',
                     }}
                   >
-                    <Icon size={24} color={feat.color} />
+                    <div
+                      style={{
+                        width: '40px',
+                        height: '40px',
+                        borderRadius: 'var(--radius-lg)',
+                        background: 'var(--bg-elevated)',
+                        border: '1px solid var(--border)',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                      }}
+                    >
+                      <Icon size={20} color="var(--accent)" />
+                    </div>
+                    <Badge variant={feat.badgeVariant}>{feat.subtitle}</Badge>
                   </div>
-                  <h3 style={{ fontSize: '1.3rem', fontWeight: 700, color: '#F3F4F6', marginBottom: '12px' }}>
+                  <h3 style={{ fontSize: 'var(--text-lg)', fontWeight: 700, color: 'var(--text-primary)', marginBottom: '8px' }}>
                     {feat.title}
                   </h3>
-                  <p style={{ fontSize: '0.95rem', color: '#9CA3AF', lineHeight: 1.6 }}>
+                  <p style={{ fontSize: 'var(--text-sm)', color: 'var(--text-secondary)', lineHeight: 1.55 }}>
                     {feat.description}
                   </p>
                 </Card>
@@ -277,14 +417,14 @@ export const Landing = () => {
       {/* Footer */}
       <footer
         style={{
-          borderTop: '1px solid rgba(255, 255, 255, 0.08)',
-          padding: '40px 32px',
+          borderTop: '1px solid var(--border)',
+          padding: '32px 24px',
           textAlign: 'center',
-          color: '#6B7280',
-          fontSize: '0.9rem',
+          color: 'var(--text-tertiary)',
+          fontSize: 'var(--text-xs)',
         }}
       >
-        <p>© 2026 Zilo-AI. Empowering engineering students to build real tech consistency.</p>
+        <p>© 2026 Zilo-AI. Empowering engineering students to build true career discipline.</p>
       </footer>
     </div>
   );

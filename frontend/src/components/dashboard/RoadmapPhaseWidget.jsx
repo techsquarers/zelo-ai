@@ -1,6 +1,6 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Map, ArrowRight, CheckCircle2 } from 'lucide-react';
+import { Map, ArrowRight, Target } from 'lucide-react';
 import { Card } from '../ui/Card';
 import { Badge } from '../ui/Badge';
 
@@ -9,45 +9,54 @@ export const RoadmapPhaseWidget = ({ roadmap }) => {
 
   if (!roadmap) {
     return (
-      <Card padding="20px">
-        <div style={{ textAlign: 'center', padding: '16px 0' }}>
-          <Map size={32} color="#22D3EE" style={{ margin: '0 auto 8px' }} />
-          <h4 style={{ fontSize: '1rem', fontWeight: 600, color: '#F3F4F6' }}>No Active Roadmap</h4>
-          <p style={{ fontSize: '0.8rem', color: '#6B7280', margin: '4px 0 12px' }}>
-            Generate a personalized career path to guide your daily tasks.
+      <Card padding="18px">
+        <div style={{ textAlign: 'center', padding: '12px 0' }}>
+          <Map size={28} color="var(--accent)" style={{ margin: '0 auto 8px' }} />
+          <h4 style={{ fontSize: 'var(--text-base)', fontWeight: 600, color: 'var(--text-primary)', marginBottom: '4px' }}>
+            No Active Campaign
+          </h4>
+          <p style={{ fontSize: 'var(--text-xs)', color: 'var(--text-tertiary)', marginBottom: '12px' }}>
+            Generate your personalized career path.
           </p>
           <button
-            onClick={() => navigate('/onboarding')}
+            onClick={() => navigate('/roadmap')}
             style={{
-              background: '#22D3EE',
-              color: '#0B0F14',
+              background: 'var(--accent)',
+              color: '#0C0E11',
               border: 'none',
-              borderRadius: '10px',
+              borderRadius: 'var(--radius-md)',
               padding: '6px 14px',
               fontWeight: 700,
-              fontSize: '0.85rem',
+              fontSize: 'var(--text-xs)',
               cursor: 'pointer',
             }}
           >
-            Create Roadmap
+            Create Campaign
           </button>
         </div>
       </Card>
     );
   }
 
-  const phases = roadmap.phases || [];
-  const currentPhaseIndex = roadmap.current_phase || 0;
-  const currentPhase = phases[currentPhaseIndex] || phases[0];
+  const phases = roadmap.phases ?? [];
+  const currentIdx = roadmap.current_phase ?? 0;
+  const currentPhase = phases[currentIdx] ?? phases[0];
 
   return (
-    <Card padding="20px">
+    <Card padding="18px" accent>
+      {/* Header */}
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '12px' }}>
         <div>
-          <Badge variant="cyan" icon={Map} className="mb-2">
-            Active Roadmap
+          <Badge variant="accent" icon={Map}>
+            Active Campaign
           </Badge>
-          <h4 style={{ fontSize: '1.05rem', fontWeight: 700, color: '#F3F4F6', marginTop: '6px' }}>
+          <h4 style={{
+            fontSize: 'var(--text-base)',
+            fontWeight: 600,
+            color: 'var(--text-primary)',
+            marginTop: '6px',
+            letterSpacing: '-0.01em',
+          }}>
             {roadmap.title}
           </h4>
         </div>
@@ -56,43 +65,57 @@ export const RoadmapPhaseWidget = ({ roadmap }) => {
           style={{
             background: 'none',
             border: 'none',
-            color: '#22D3EE',
-            fontSize: '0.8rem',
+            color: 'var(--accent)',
+            fontSize: 'var(--text-xs)',
             fontWeight: 600,
             cursor: 'pointer',
             display: 'inline-flex',
             alignItems: 'center',
-            gap: '4px',
-            padding: 0,
+            gap: '3px',
+            padding: '4px',
+            borderRadius: 'var(--radius-sm)',
           }}
         >
-          View Full <ArrowRight size={14} />
+          Full view <ArrowRight size={12} />
         </button>
       </div>
 
+      {/* Current phase block */}
       {currentPhase && (
         <div
           style={{
-            background: 'rgba(255, 255, 255, 0.03)',
-            border: '1px solid rgba(255, 255, 255, 0.06)',
-            borderRadius: '14px',
-            padding: '14px',
-            marginTop: '12px',
+            background: 'var(--bg-elevated)',
+            border: '1px solid var(--border)',
+            borderRadius: 'var(--radius-lg)',
+            padding: '12px',
           }}
         >
-          <div style={{ fontSize: '0.75rem', color: '#9CA3AF', textTransform: 'uppercase', letterSpacing: '0.05em', fontWeight: 600 }}>
-            Phase {currentPhase.phase || currentPhaseIndex + 1}
+          <div style={{
+            fontSize: 'var(--text-xs)',
+            color: 'var(--text-tertiary)',
+            textTransform: 'uppercase',
+            letterSpacing: '0.06em',
+            fontWeight: 700,
+            marginBottom: '3px',
+          }}>
+            Phase {currentPhase.phase ?? currentIdx + 1} of {phases.length}
           </div>
-          <div style={{ fontSize: '0.95rem', fontWeight: 700, color: '#22D3EE', marginTop: '2px' }}>
+          <div style={{
+            fontSize: 'var(--text-base)',
+            fontWeight: 700,
+            color: 'var(--accent)',
+            letterSpacing: '-0.01em',
+            marginBottom: '10px',
+          }}>
             {currentPhase.title}
           </div>
 
           {currentPhase.focus && (
-            <div style={{ marginTop: '10px', display: 'flex', flexDirection: 'column', gap: '6px' }}>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '5px' }}>
               {currentPhase.focus.slice(0, 3).map((item, idx) => (
-                <div key={idx} style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '0.8rem', color: '#D1D5DB' }}>
-                  <CheckCircle2 size={14} color="#34D399" />
-                  <span>{item}</span>
+                <div key={idx} style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                  <Target size={12} color="var(--accent)" />
+                  <span style={{ fontSize: 'var(--text-xs)', color: 'var(--text-secondary)' }}>{item}</span>
                 </div>
               ))}
             </div>

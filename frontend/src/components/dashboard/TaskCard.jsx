@@ -16,121 +16,158 @@ import { Badge } from '../ui/Badge';
 
 export const TaskCard = ({ task, onComplete, isPendingAction = false, isFirstPending = false }) => {
   const [isExpanded, setIsExpanded] = useState(false);
-  const [showXpToast, setShowXpToast] = useState(false);
+  const [showXpFlash, setShowXpFlash] = useState(false);
 
-  const isDone = task.status === 'done';
+  const isDone    = task.status === 'done';
   const isPartial = task.status === 'partial';
   const isSkipped = task.status === 'skipped';
 
   const handleAction = (status) => {
     if (isPendingAction) return;
-
     if (status === 'done') {
-      setShowXpToast(true);
-      setTimeout(() => setShowXpToast(false), 1500);
+      setShowXpFlash(true);
+      setTimeout(() => setShowXpFlash(false), 1100);
     }
     onComplete(task.id, status);
   };
 
+  const borderColor = isFirstPending
+    ? 'var(--accent)'
+    : isDone
+    ? 'var(--success-border)'
+    : 'var(--border)';
+
+  const bgColor = isDone
+    ? 'rgba(34,197,94,0.03)'
+    : isSkipped
+    ? 'var(--bg-base)'
+    : 'var(--bg-surface)';
+
   return (
     <motion.div
       id={`task-card-${task.id}`}
-      initial={{ opacity: 0, y: 15 }}
+      initial={{ opacity: 0, y: 10 }}
       animate={{ opacity: 1, y: 0 }}
-      exit={{ opacity: 0, scale: 0.95 }}
-      transition={{ duration: 0.3 }}
+      exit={{ opacity: 0 }}
+      transition={{ duration: 0.22 }}
       style={{
         position: 'relative',
-        background: isDone
-          ? 'rgba(52, 211, 153, 0.04)'
-          : isSkipped
-          ? 'rgba(255, 255, 255, 0.02)'
-          : 'rgba(15, 20, 28, 0.75)',
-        backdropFilter: 'blur(16px)',
-        border: isFirstPending
-          ? '1.5px solid #22D3EE'
-          : isDone
-          ? '1px solid rgba(52, 211, 153, 0.3)'
-          : '1px solid rgba(255, 255, 255, 0.08)',
-        borderRadius: '20px',
-        padding: '20px 24px',
+        background: bgColor,
+        border: `1px solid ${borderColor}`,
+        borderRadius: 'var(--radius-xl)',
+        padding: '16px 20px',
         boxShadow: isFirstPending
-          ? '0 0 20px rgba(34, 211, 238, 0.2)'
-          : '0 8px 32px rgba(0, 0, 0, 0.3)',
-        transition: 'all 0.25s ease',
+          ? `0 0 0 1px var(--accent-border), var(--shadow-sm)`
+          : 'var(--shadow-sm)',
+        transition: `border-color var(--t-base), box-shadow var(--t-base)`,
       }}
     >
-      {/* Floating +XP Micro-Animation */}
+      {/* Active mission pulse indicator */}
+      {isFirstPending && !isDone && (
+        <div
+          style={{
+            position: 'absolute',
+            left: 0,
+            top: '20%',
+            bottom: '20%',
+            width: '2px',
+            background: 'var(--accent)',
+            borderRadius: '0 2px 2px 0',
+            boxShadow: '0 0 6px var(--accent-glow)',
+          }}
+        />
+      )}
+
+      {/* XP flash animation */}
       <AnimatePresence>
-        {showXpToast && (
+        {showXpFlash && (
           <motion.div
-            initial={{ opacity: 0, y: 0, scale: 0.5 }}
-            animate={{ opacity: 1, y: -45, scale: 1.2 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.8, ease: 'easeOut' }}
+            initial={{ opacity: 0, y: 0, scale: 0.7 }}
+            animate={{ opacity: 1, y: -32, scale: 1 }}
+            exit={{ opacity: 0, y: -52 }}
+            transition={{ duration: 0.9, ease: 'easeOut' }}
             style={{
               position: 'absolute',
-              top: '16px',
-              right: '24px',
-              zIndex: 20,
-              background: 'linear-gradient(135deg, #10B981 0%, #34D399 100%)',
-              color: '#0B0F14',
-              padding: '6px 14px',
-              borderRadius: '9999px',
+              top: '12px',
+              right: '20px',
+              zIndex: 10,
+              background: 'var(--success)',
+              color: '#0C0E11',
+              padding: '3px 10px',
+              borderRadius: 'var(--radius-full)',
               fontWeight: 800,
-              fontSize: '0.95rem',
-              boxShadow: '0 4px 15px rgba(52, 211, 153, 0.5)',
+              fontSize: 'var(--text-xs)',
               display: 'flex',
               alignItems: 'center',
-              gap: '4px',
+              gap: '3px',
               pointerEvents: 'none',
+              boxShadow: '0 2px 12px var(--success-dim)',
             }}
           >
-            <Zap size={16} fill="#0B0F14" /> +{task.xp_value} XP!
+            <Zap size={12} fill="#0C0E11" />
+            +{task.xp_value} XP
           </motion.div>
         )}
       </AnimatePresence>
 
-      <div style={{ display: 'flex', alignItems: 'flex-start', gap: '16px' }}>
-        {/* Status Check Icon */}
-        <div style={{ marginTop: '2px', cursor: 'pointer' }} onClick={() => !isDone && handleAction('done')}>
+      <div style={{ display: 'flex', alignItems: 'flex-start', gap: '14px' }}>
+        {/* Status toggle */}
+        <button
+          style={{
+            marginTop: '1px',
+            background: 'none',
+            border: 'none',
+            padding: 0,
+            cursor: isDone ? 'default' : 'pointer',
+            flexShrink: 0,
+          }}
+          onClick={() => !isDone && handleAction('done')}
+          title={isDone ? 'Mission complete' : 'Mark as done'}
+        >
           {isDone ? (
-            <motion.div initial={{ scale: 0 }} animate={{ scale: 1 }}>
-              <CheckCircle2 size={26} color="#34D399" fill="rgba(52, 211, 153, 0.2)" />
+            <motion.div initial={{ scale: 0.5 }} animate={{ scale: 1 }} transition={{ type: 'spring', stiffness: 300 }}>
+              <CheckCircle2 size={22} color="var(--success)" />
             </motion.div>
           ) : isPartial ? (
-            <AlertCircle size={26} color="#FBBF24" />
+            <AlertCircle size={22} color="#FBBF24" />
           ) : isSkipped ? (
-            <SkipForward size={26} color="#6B7280" />
+            <SkipForward size={22} color="var(--text-tertiary)" />
           ) : (
-            <Circle size={26} color="#6B7280" />
+            <Circle size={22} color={isFirstPending ? 'var(--accent)' : 'var(--text-tertiary)'} />
           )}
-        </div>
+        </button>
 
-        {/* Task Main Details */}
-        <div style={{ flex: 1 }}>
-          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '12px', flexWrap: 'wrap' }}>
+        {/* Content */}
+        <div style={{ flex: 1, minWidth: 0 }}>
+          {/* Title row */}
+          <div style={{
+            display: 'flex',
+            alignItems: 'flex-start',
+            justifyContent: 'space-between',
+            gap: '12px',
+            flexWrap: 'wrap',
+          }}>
             <h4
               style={{
-                fontSize: '1.1rem',
-                fontWeight: 700,
-                color: isDone ? '#9CA3AF' : '#F3F4F6',
+                fontSize: 'var(--text-base)',
+                fontWeight: 600,
+                color: isDone ? 'var(--text-tertiary)' : 'var(--text-primary)',
                 textDecoration: isDone ? 'line-through' : 'none',
+                letterSpacing: '-0.01em',
+                lineHeight: 1.35,
               }}
             >
               {task.title}
             </h4>
 
-            {/* Badges: Minutes + XP */}
-            <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+            {/* Meta badges */}
+            <div style={{ display: 'flex', alignItems: 'center', gap: '6px', flexShrink: 0 }}>
               <Badge variant="muted" icon={Clock}>
-                {task.estimated_minutes} min
+                {task.estimated_minutes}m
               </Badge>
-
-              <Badge variant={isDone ? 'success' : 'violet'} icon={Zap}>
-                +{task.xp_value} XP
+              <Badge variant={isDone ? 'success' : 'xp'} icon={Zap}>
+                +{task.xp_value}
               </Badge>
-
               {task.resource_url && (
                 <a
                   href={task.resource_url}
@@ -140,31 +177,34 @@ export const TaskCard = ({ task, onComplete, isPendingAction = false, isFirstPen
                     display: 'inline-flex',
                     alignItems: 'center',
                     gap: '4px',
-                    padding: '4px 10px',
-                    borderRadius: '9999px',
-                    fontSize: '0.75rem',
+                    padding: '3px 8px',
+                    borderRadius: 'var(--radius-md)',
+                    fontSize: 'var(--text-xs)',
                     fontWeight: 600,
-                    color: '#22D3EE',
-                    background: 'rgba(34, 211, 238, 0.1)',
-                    border: '1px solid rgba(34, 211, 238, 0.3)',
+                    color: 'var(--accent)',
+                    background: 'var(--accent-dim)',
+                    border: '1px solid var(--accent-border)',
                     textDecoration: 'none',
+                    transition: 'background var(--t-fast)',
                   }}
+                  onMouseEnter={(e) => e.currentTarget.style.background = 'rgba(56,189,248,0.2)'}
+                  onMouseLeave={(e) => e.currentTarget.style.background = 'var(--accent-dim)'}
                 >
-                  <span>Resource</span>
-                  <ExternalLink size={12} />
+                  Resource
+                  <ExternalLink size={11} />
                 </a>
               )}
             </div>
           </div>
 
-          {/* Description with Expand/Collapse */}
+          {/* Description */}
           {task.description && (
             <div style={{ marginTop: '8px' }}>
               <p
                 style={{
-                  fontSize: '0.9rem',
-                  color: isDone ? '#6B7280' : '#9CA3AF',
-                  lineHeight: 1.5,
+                  fontSize: 'var(--text-sm)',
+                  color: isDone ? 'var(--text-tertiary)' : 'var(--text-secondary)',
+                  lineHeight: 1.55,
                   display: isExpanded ? 'block' : '-webkit-box',
                   WebkitLineClamp: isExpanded ? 'unset' : 2,
                   WebkitBoxOrient: 'vertical',
@@ -173,15 +213,14 @@ export const TaskCard = ({ task, onComplete, isPendingAction = false, isFirstPen
               >
                 {task.description}
               </p>
-
-              {task.description.length > 90 && (
+              {task.description.length > 100 && (
                 <button
                   onClick={() => setIsExpanded(!isExpanded)}
                   style={{
                     background: 'none',
                     border: 'none',
-                    color: '#22D3EE',
-                    fontSize: '0.8rem',
+                    color: 'var(--accent)',
+                    fontSize: 'var(--text-xs)',
                     fontWeight: 600,
                     cursor: 'pointer',
                     display: 'inline-flex',
@@ -189,25 +228,21 @@ export const TaskCard = ({ task, onComplete, isPendingAction = false, isFirstPen
                     gap: '2px',
                     marginTop: '4px',
                     padding: 0,
+                    letterSpacing: '-0.01em',
                   }}
                 >
-                  {isExpanded ? (
-                    <>
-                      <span>Show Less</span> <ChevronUp size={14} />
-                    </>
-                  ) : (
-                    <>
-                      <span>Read Full Details</span> <ChevronDown size={14} />
-                    </>
-                  )}
+                  {isExpanded
+                    ? <><span>Show less</span><ChevronUp size={13} /></>
+                    : <><span>Read more</span><ChevronDown size={13} /></>
+                  }
                 </button>
               )}
             </div>
           )}
 
-          {/* Actions Bar */}
+          {/* Actions */}
           {!isDone && (
-            <div style={{ display: 'flex', gap: '10px', marginTop: '16px', flexWrap: 'wrap' }}>
+            <div style={{ display: 'flex', gap: '8px', marginTop: '14px', flexWrap: 'wrap' }}>
               <Button
                 size="sm"
                 variant="primary"
@@ -215,9 +250,8 @@ export const TaskCard = ({ task, onComplete, isPendingAction = false, isFirstPen
                 isLoading={isPendingAction}
                 onClick={() => handleAction('done')}
               >
-                Mark Done
+                Complete Mission
               </Button>
-
               <Button
                 size="sm"
                 variant="secondary"
@@ -227,7 +261,6 @@ export const TaskCard = ({ task, onComplete, isPendingAction = false, isFirstPen
               >
                 Partial
               </Button>
-
               <Button
                 size="sm"
                 variant="ghost"

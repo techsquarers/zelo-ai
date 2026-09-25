@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { Mail, Lock, Sparkles, ArrowRight } from 'lucide-react';
+import { Mail, Lock, Shield, ArrowRight, AlertTriangle } from 'lucide-react';
 import { registerApi, loginApi, getMeApi } from '../api/auth';
 import { getProgressSummaryApi } from '../api/progress';
 import { useAuthStore } from '../store/authStore';
@@ -36,9 +36,9 @@ export const Register = () => {
     setErrorMsg('');
 
     try {
-      // 1. Call Register API
+      // 1. Register API
       await registerApi(email, password);
-      showToast('Account created successfully!', 'success');
+      showToast('Account initialized successfully!', 'success');
 
       // 2. Auto-login
       const tokenData = await loginApi(email, password);
@@ -72,80 +72,86 @@ export const Register = () => {
     <div
       style={{
         minHeight: '100vh',
-        background: '#0B0F14',
+        background: 'var(--bg-base)',
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
         padding: '24px',
         position: 'relative',
+        fontFamily: 'var(--font-ui)',
       }}
     >
       {/* Background Radial Glow */}
       <div
         style={{
           position: 'absolute',
-          top: '30%',
+          top: '35%',
           left: '50%',
           transform: 'translate(-50%, -50%)',
           width: '500px',
           height: '500px',
-          background: 'radial-gradient(circle, rgba(139, 92, 246, 0.15) 0%, rgba(34, 211, 238, 0.08) 50%, rgba(0,0,0,0) 70%)',
+          background: 'radial-gradient(circle, var(--accent-dim) 0%, transparent 70%)',
           pointerEvents: 'none',
         }}
       />
 
       <motion.div
-        initial={{ opacity: 0, scale: 0.95 }}
-        animate={{ opacity: 1, scale: 1 }}
-        transition={{ duration: 0.4 }}
-        style={{ width: '100%', maxWidth: '440px', position: 'relative', zIndex: 10 }}
+        initial={{ opacity: 0, y: 12 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.35 }}
+        style={{ width: '100%', maxWidth: '420px', position: 'relative', zIndex: 10 }}
       >
-        <Card padding="36px">
+        <Card padding="32px" accent>
           {/* Header */}
-          <div style={{ textAlign: 'center', marginBottom: '32px' }}>
+          <div style={{ textAlign: 'center', marginBottom: '28px' }}>
             <div
               style={{
-                width: '48px',
-                height: '48px',
-                borderRadius: '14px',
-                background: 'linear-gradient(135deg, #8B5CF6 0%, #22D3EE 100%)',
+                width: '44px',
+                height: '44px',
+                borderRadius: 'var(--radius-lg)',
+                background: 'var(--accent)',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
-                margin: '0 auto 16px',
+                margin: '0 auto 14px',
+                boxShadow: '0 0 18px var(--accent-glow)',
               }}
             >
-              <Sparkles size={26} color="#0B0F14" />
+              <Shield size={24} color="#0C0E11" strokeWidth={2.5} />
             </div>
-            <h2 style={{ fontSize: '1.75rem', fontWeight: 800, color: '#F3F4F6', letterSpacing: '-0.02em' }}>
-              Create your account
+            <h2 style={{ fontSize: 'var(--text-xl)', fontWeight: 800, color: 'var(--text-primary)', letterSpacing: '-0.02em' }}>
+              Initialize Warrior Rank
             </h2>
-            <p style={{ fontSize: '0.9rem', color: '#9CA3AF', marginTop: '6px' }}>
-              Join Zilo-AI and start your daily tech career execution
+            <p style={{ fontSize: 'var(--text-xs)', color: 'var(--text-tertiary)', marginTop: '4px' }}>
+              Create your account & build your tech discipline
             </p>
           </div>
 
           {errorMsg && (
             <div
               style={{
-                background: 'rgba(239, 68, 68, 0.12)',
-                border: '1px solid rgba(239, 68, 68, 0.3)',
-                color: '#F87171',
-                padding: '12px 16px',
-                borderRadius: '12px',
-                fontSize: '0.85rem',
-                marginBottom: '20px',
+                background: 'var(--danger-dim)',
+                border: '1px solid var(--danger-border)',
+                color: 'var(--text-danger)',
+                padding: '10px 14px',
+                borderRadius: 'var(--radius-md)',
+                fontSize: 'var(--text-xs)',
+                marginBottom: '18px',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '8px',
               }}
             >
-              {errorMsg}
+              <AlertTriangle size={15} flexShrink={0} />
+              <span>{errorMsg}</span>
             </div>
           )}
 
-          <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
+          <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
             <Input
               label="Email Address"
               type="email"
-              placeholder="you@example.com"
+              placeholder="warrior@example.com"
               icon={Mail}
               value={email}
               onChange={(e) => setEmail(e.target.value)}
@@ -153,7 +159,7 @@ export const Register = () => {
             />
 
             <Input
-              label="Password (min 6 characters)"
+              label="Password (min 6 chars)"
               type="password"
               placeholder="••••••••"
               icon={Lock}
@@ -164,27 +170,27 @@ export const Register = () => {
 
             <Button
               type="submit"
-              variant="glow"
+              variant="primary"
               size="lg"
               isLoading={isLoading}
               rightIcon={ArrowRight}
-              style={{ marginTop: '8px', width: '100%' }}
+              style={{ marginTop: '6px', width: '100%' }}
             >
-              Create Account
+              Begin Onboarding
             </Button>
           </form>
 
           <div
             style={{
               textAlign: 'center',
-              marginTop: '24px',
-              fontSize: '0.9rem',
-              color: '#9CA3AF',
+              marginTop: '20px',
+              fontSize: 'var(--text-xs)',
+              color: 'var(--text-secondary)',
             }}
           >
-            Already have an account?{' '}
-            <Link to="/login" style={{ color: '#8B5CF6', fontWeight: 600 }}>
-              Sign in
+            Already registered?{' '}
+            <Link to="/login" style={{ color: 'var(--accent)', fontWeight: 700 }}>
+              Sign in to account
             </Link>
           </div>
         </Card>

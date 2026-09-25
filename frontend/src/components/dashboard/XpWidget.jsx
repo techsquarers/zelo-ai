@@ -1,52 +1,76 @@
 import React from 'react';
-import { Zap, TrendingUp } from 'lucide-react';
+import { Shield, TrendingUp } from 'lucide-react';
 import { Card } from '../ui/Card';
 import { ProgressBar } from '../ui/ProgressBar';
 
 export const XpWidget = ({ xpData }) => {
-  const totalXp = xpData?.total_xp || 0;
+  const totalXp = xpData?.total_xp ?? 0;
   const level = Math.floor(totalXp / 100) + 1;
-  const xpInCurrentLevel = totalXp % 100;
-  const progressToNextLevel = (xpInCurrentLevel / 100) * 100;
+  const xpInLevel = totalXp % 100;
+  const toNext = 100 - xpInLevel;
 
   return (
-    <Card padding="20px">
-      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '16px' }}>
+    <Card padding="18px">
+      {/* Header */}
+      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '14px' }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
           <div
             style={{
               width: '40px',
               height: '40px',
-              borderRadius: '12px',
-              background: 'rgba(52, 211, 153, 0.15)',
-              border: '1px solid rgba(52, 211, 153, 0.3)',
+              borderRadius: 'var(--radius-lg)',
+              background: 'var(--xp-dim)',
+              border: '1px solid rgba(167,139,250,0.3)',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
             }}
           >
-            <Zap size={22} color="#34D399" fill="#34D399" />
+            <Shield size={20} color="var(--xp)" />
           </div>
           <div>
-            <div style={{ fontSize: '1.2rem', fontWeight: 800, color: '#34D399' }}>
-              Level {level}
+            <div style={{
+              fontSize: 'var(--text-xl)',
+              fontWeight: 800,
+              color: 'var(--xp)',
+              letterSpacing: '-0.02em',
+              lineHeight: 1.1,
+            }}>
+              Rank {level}
             </div>
-            <div style={{ fontSize: '0.8rem', color: '#9CA3AF' }}>{totalXp} Total XP</div>
+            <div style={{ fontSize: 'var(--text-xs)', color: 'var(--text-tertiary)', marginTop: '2px' }}>
+              {totalXp} total XP
+            </div>
           </div>
         </div>
 
-        <div style={{ display: 'flex', alignItems: 'center', gap: '4px', fontSize: '0.8rem', color: '#34D399', fontWeight: 600 }}>
-          <TrendingUp size={16} />
-          <span>+{100 - xpInCurrentLevel} XP to Lv {level + 1}</span>
+        <div style={{
+          display: 'flex',
+          alignItems: 'center',
+          gap: '4px',
+          fontSize: 'var(--text-xs)',
+          color: 'var(--text-secondary)',
+          fontWeight: 600,
+        }}>
+          <TrendingUp size={13} color="var(--success)" />
+          <span style={{ color: 'var(--success)' }}>+{toNext}</span>
+          <span>to Rank {level + 1}</span>
         </div>
       </div>
 
+      {/* XP Bar */}
       <div>
-        <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.75rem', color: '#6B7280', marginBottom: '6px' }}>
-          <span>Level {level} Progress</span>
-          <span>{xpInCurrentLevel} / 100 XP</span>
+        <div style={{
+          display: 'flex',
+          justifyContent: 'space-between',
+          fontSize: 'var(--text-xs)',
+          color: 'var(--text-tertiary)',
+          marginBottom: '6px',
+        }}>
+          <span>Rank {level} progress</span>
+          <span style={{ color: 'var(--text-secondary)', fontWeight: 600 }}>{xpInLevel} / 100</span>
         </div>
-        <ProgressBar progress={progressToNextLevel} variant="success" height="8px" />
+        <ProgressBar progress={(xpInLevel / 100) * 100} variant="xp" height="5px" />
       </div>
     </Card>
   );

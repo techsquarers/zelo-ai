@@ -3,26 +3,23 @@ import { motion } from 'framer-motion';
 
 export const ProgressBar = ({
   progress = 0,
-  variant = 'cyan',
-  height = '8px',
+  variant = 'accent',
+  height = '6px',
   showPercentage = false,
   className = '',
 }) => {
-  const clampedProgress = Math.min(100, Math.max(0, progress));
+  const clamped = Math.min(100, Math.max(0, progress));
 
-  const getGradient = () => {
-    switch (variant) {
-      case 'streak':
-        return 'linear-gradient(90deg, #F97316 0%, #FBBF24 100%)';
-      case 'violet':
-        return 'linear-gradient(90deg, #8B5CF6 0%, #C084FC 100%)';
-      case 'success':
-        return 'linear-gradient(90deg, #10B981 0%, #34D399 100%)';
-      case 'cyan':
-      default:
-        return 'linear-gradient(90deg, #0EA5E9 0%, #22D3EE 100%)';
-    }
+  const gradients = {
+    accent:  'linear-gradient(90deg, var(--accent-strong) 0%, var(--accent) 100%)',
+    cyan:    'linear-gradient(90deg, var(--accent-strong) 0%, var(--accent) 100%)',
+    streak:  'linear-gradient(90deg, #EA580C 0%, var(--streak) 100%)',
+    success: 'linear-gradient(90deg, #16A34A 0%, var(--success) 100%)',
+    xp:      'linear-gradient(90deg, #7C3AED 0%, var(--xp) 100%)',
+    violet:  'linear-gradient(90deg, #7C3AED 0%, var(--xp) 100%)',
   };
+
+  const gradient = gradients[variant] ?? gradients.accent;
 
   return (
     <div style={{ width: '100%' }} className={className}>
@@ -31,34 +28,35 @@ export const ProgressBar = ({
           style={{
             display: 'flex',
             justifyContent: 'space-between',
-            fontSize: '0.8rem',
-            color: '#9CA3AF',
-            marginBottom: '6px',
+            fontSize: 'var(--text-xs)',
+            color: 'var(--text-tertiary)',
+            marginBottom: '5px',
           }}
         >
           <span>Progress</span>
-          <span style={{ fontWeight: 600, color: '#F3F4F6' }}>{Math.round(clampedProgress)}%</span>
+          <span style={{ fontWeight: 600, color: 'var(--text-secondary)' }}>
+            {Math.round(clamped)}%
+          </span>
         </div>
       )}
+
       <div
         style={{
           width: '100%',
-          height: height,
-          background: 'rgba(255, 255, 255, 0.08)',
-          borderRadius: '9999px',
+          height,
+          background: 'rgba(255,255,255,0.07)',
+          borderRadius: 'var(--radius-full)',
           overflow: 'hidden',
-          position: 'relative',
         }}
       >
         <motion.div
           initial={{ width: 0 }}
-          animate={{ width: `${clampedProgress}%` }}
-          transition={{ duration: 0.6, ease: 'easeOut' }}
+          animate={{ width: `${clamped}%` }}
+          transition={{ duration: 0.5, ease: 'easeOut' }}
           style={{
             height: '100%',
-            background: getGradient(),
-            borderRadius: '9999px',
-            boxShadow: '0 0 10px rgba(34, 211, 238, 0.4)',
+            background: gradient,
+            borderRadius: 'var(--radius-full)',
           }}
         />
       </div>

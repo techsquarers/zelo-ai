@@ -7,9 +7,9 @@ import {
   CheckCircle2,
   Circle,
   Sparkles,
-  RotateCcw,
   Target,
   ArrowRight,
+  Shield,
 } from 'lucide-react';
 import { AppShell } from '../components/layout/AppShell';
 import { Card } from '../components/ui/Card';
@@ -37,7 +37,7 @@ export const RoadmapPage = () => {
   const generateMutation = useMutation({
     mutationFn: () => generateRoadmapApi(),
     onSuccess: () => {
-      showToast('New career roadmap generated!', 'success');
+      showToast('New campaign roadmap generated!', 'success');
       queryClient.invalidateQueries({ queryKey: ['currentRoadmap'] });
       refetch();
     },
@@ -53,33 +53,33 @@ export const RoadmapPage = () => {
     totalPhases > 0 ? Math.round(((currentPhaseIdx + 1) / totalPhases) * 100) : 0;
 
   return (
-    <AppShell title="Career Roadmap">
-      <div style={{ maxWidth: '960px', margin: '0 auto', display: 'flex', flexDirection: 'column', gap: '32px' }}>
+    <AppShell title="Campaign Roadmap">
+      <div style={{ maxWidth: '960px', margin: '0 auto', display: 'flex', flexDirection: 'column', gap: '28px' }}>
         {/* Roadmap Overview Header */}
-        <Card padding="28px" glow glowColor="cyan">
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '20px' }}>
+        <Card padding="24px" glow glowColor="accent" accent>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '16px' }}>
             <div>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '8px' }}>
-                <Sparkles size={20} color="#22D3EE" />
-                <Badge variant="cyan">Visual Tech Path</Badge>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '6px' }}>
+                <Shield size={18} color="var(--accent)" />
+                <Badge variant="cyan">CAMPAIGN PATH</Badge>
               </div>
-              <h1 style={{ fontSize: '2rem', fontWeight: 800, color: '#F3F4F6', letterSpacing: '-0.02em' }}>
+              <h1 style={{ fontSize: 'var(--text-xl)', fontWeight: 800, color: 'var(--text-primary)', letterSpacing: '-0.02em', margin: 0 }}>
                 {roadmap?.title || 'Personalized Tech Roadmap'}
               </h1>
-              <p style={{ fontSize: '0.95rem', color: '#9CA3AF', marginTop: '4px' }}>
-                Targeting Role: <span style={{ color: '#22D3EE', fontWeight: 600 }}>{roadmap?.target_role?.toUpperCase() || 'SDE'}</span>
+              <p style={{ fontSize: 'var(--text-xs)', color: 'var(--text-tertiary)', marginTop: '4px' }}>
+                Targeting Role: <span style={{ color: 'var(--accent)', fontWeight: 700 }}>{roadmap?.target_role?.toUpperCase() || 'SDE'}</span>
               </p>
             </div>
 
-            <div style={{ display: 'flex', alignItems: 'center', gap: '16px', background: 'rgba(255, 255, 255, 0.04)', padding: '14px 20px', borderRadius: '20px' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '16px', background: 'var(--bg-elevated)', padding: '12px 18px', borderRadius: 'var(--radius-lg)', border: '1px solid var(--border)' }}>
               <div>
-                <div style={{ fontSize: '1.2rem', fontWeight: 800, color: '#34D399' }}>
+                <div style={{ fontSize: 'var(--text-base)', fontWeight: 800, color: 'var(--success)' }}>
                   Phase {currentPhaseIdx + 1} of {totalPhases || 4}
                 </div>
-                <div style={{ fontSize: '0.75rem', color: '#9CA3AF' }}>Roadmap Progress</div>
+                <div style={{ fontSize: 'var(--text-xs)', color: 'var(--text-tertiary)' }}>Campaign Progress</div>
               </div>
               <div style={{ width: '90px' }}>
-                <ProgressBar progress={progressPercent} variant="cyan" height="8px" />
+                <ProgressBar progress={progressPercent} variant="cyan" height="6px" />
               </div>
             </div>
           </div>
@@ -87,45 +87,45 @@ export const RoadmapPage = () => {
 
         {/* Loading Skeletons */}
         {isLoading ? (
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
-            <Skeleton height="160px" borderRadius="24px" />
-            <Skeleton height="160px" borderRadius="24px" />
-            <Skeleton height="160px" borderRadius="24px" />
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
+            <Skeleton height="140px" borderRadius="16px" />
+            <Skeleton height="140px" borderRadius="16px" />
+            <Skeleton height="140px" borderRadius="16px" />
           </div>
         ) : isError || !roadmap ? (
           /* Empty / Generate Roadmap CTA */
-          <Card padding="40px">
+          <Card padding="40px" accent>
             <div style={{ textAlign: 'center', maxWidth: '440px', margin: '0 auto' }}>
-              <MapPin size={48} color="#22D3EE" style={{ margin: '0 auto 16px' }} />
-              <h3 style={{ fontSize: '1.4rem', fontWeight: 800, color: '#F3F4F6' }}>
-                No Active Roadmap Found
+              <MapPin size={44} color="var(--accent)" style={{ margin: '0 auto 16px' }} />
+              <h3 style={{ fontSize: 'var(--text-lg)', fontWeight: 800, color: 'var(--text-primary)' }}>
+                No Active Campaign Found
               </h3>
-              <p style={{ fontSize: '0.95rem', color: '#9CA3AF', margin: '8px 0 24px' }}>
+              <p style={{ fontSize: 'var(--text-sm)', color: 'var(--text-secondary)', margin: '8px 0 24px' }}>
                 Build your structured, step-by-step career path based on your target role and study availability.
               </p>
               <Button
-                variant="glow"
+                variant="primary"
                 size="lg"
                 rightIcon={ArrowRight}
                 isLoading={generateMutation.isPending}
                 onClick={() => generateMutation.mutate()}
               >
-                Generate Custom Roadmap
+                Generate Custom Campaign
               </Button>
             </div>
           </Card>
         ) : (
           /* Vertical Phase Timeline */
-          <div style={{ position: 'relative', display: 'flex', flexDirection: 'column', gap: '32px' }}>
+          <div style={{ position: 'relative', display: 'flex', flexDirection: 'column', gap: '28px' }}>
             {/* Timeline Vertical Connecting Line */}
             <div
               style={{
                 position: 'absolute',
-                top: '40px',
-                bottom: '40px',
-                left: '27px',
-                width: '3px',
-                background: 'linear-gradient(180deg, #22D3EE 0%, #8B5CF6 50%, rgba(255,255,255,0.08) 100%)',
+                top: '32px',
+                bottom: '32px',
+                left: '23px',
+                width: '2px',
+                background: 'linear-gradient(180deg, var(--accent) 0%, var(--border) 100%)',
                 zIndex: 0,
               }}
             />
@@ -137,66 +137,66 @@ export const RoadmapPage = () => {
               return (
                 <motion.div
                   key={index}
-                  initial={{ opacity: 0, x: -20 }}
+                  initial={{ opacity: 0, x: -16 }}
                   animate={{ opacity: 1, x: 0 }}
-                  transition={{ duration: 0.4, delay: index * 0.1 }}
+                  transition={{ duration: 0.3, delay: index * 0.08 }}
                   style={{
                     position: 'relative',
                     zIndex: 1,
                     display: 'flex',
-                    gap: '24px',
+                    gap: '20px',
                     alignItems: 'flex-start',
                   }}
                 >
                   {/* Timeline Circle Marker */}
                   <div
                     style={{
-                      width: '56px',
-                      height: '56px',
+                      width: '48px',
+                      height: '48px',
                       borderRadius: '50%',
                       background: isCurrent
-                        ? 'linear-gradient(135deg, #22D3EE 0%, #8B5CF6 100%)'
+                        ? 'var(--accent)'
                         : isCompleted
-                        ? '#10B981'
-                        : 'rgba(15, 20, 28, 0.9)',
+                        ? 'var(--success)'
+                        : 'var(--bg-elevated)',
                       border: isCurrent
-                        ? '3px solid #22D3EE'
+                        ? '3px solid var(--accent-border)'
                         : isCompleted
-                        ? '3px solid #34D399'
-                        : '2px solid rgba(255, 255, 255, 0.15)',
+                        ? '3px solid var(--success-border)'
+                        : '2px solid var(--border)',
                       display: 'flex',
                       alignItems: 'center',
                       justifyContent: 'center',
-                      color: isCurrent || isCompleted ? '#0B0F14' : '#9CA3AF',
+                      color: isCurrent || isCompleted ? '#0C0E11' : 'var(--text-tertiary)',
                       fontWeight: 800,
-                      fontSize: '1.2rem',
-                      boxShadow: isCurrent ? '0 0 25px rgba(34, 211, 238, 0.5)' : 'none',
+                      fontSize: 'var(--text-base)',
+                      boxShadow: isCurrent ? '0 0 20px var(--accent-glow)' : 'none',
                       flexShrink: 0,
                     }}
                   >
-                    {isCompleted ? <CheckCircle2 size={28} color="#0B0F14" /> : index + 1}
+                    {isCompleted ? <CheckCircle2 size={24} color="#0C0E11" /> : index + 1}
                   </div>
 
                   {/* Phase Card */}
                   <div style={{ flex: 1 }}>
                     <Card
-                      padding="28px"
+                      padding="24px"
                       glow={isCurrent}
-                      glowColor="cyan"
+                      glowColor="accent"
+                      accent={isCurrent}
                       style={{
-                        opacity: isCompleted ? 0.75 : 1,
-                        background: isCurrent ? 'rgba(34, 211, 238, 0.04)' : 'rgba(15, 20, 28, 0.75)',
+                        opacity: isCompleted ? 0.8 : 1,
                       }}
                     >
-                      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: '12px', marginBottom: '16px' }}>
+                      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: '12px', marginBottom: '14px' }}>
                         <div>
-                          <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '6px' }}>
-                            <span style={{ fontSize: '0.8rem', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.05em', color: isCurrent ? '#22D3EE' : '#9CA3AF' }}>
+                          <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '4px' }}>
+                            <span style={{ fontSize: 'var(--text-xs)', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.05em', color: isCurrent ? 'var(--accent)' : 'var(--text-tertiary)' }}>
                               Phase {phase.phase || index + 1}
                             </span>
                             {isCurrent && (
                               <Badge variant="cyan" icon={Sparkles}>
-                                Current Active Phase
+                                Active Phase
                               </Badge>
                             )}
                             {isCompleted && (
@@ -206,7 +206,7 @@ export const RoadmapPage = () => {
                             )}
                           </div>
 
-                          <h3 style={{ fontSize: '1.4rem', fontWeight: 800, color: '#F3F4F6' }}>
+                          <h3 style={{ fontSize: 'var(--text-lg)', fontWeight: 800, color: 'var(--text-primary)' }}>
                             {phase.title}
                           </h3>
                         </div>
@@ -216,28 +216,28 @@ export const RoadmapPage = () => {
                           style={{
                             display: 'inline-flex',
                             alignItems: 'center',
-                            gap: '6px',
-                            background: 'rgba(255, 255, 255, 0.06)',
-                            border: '1px solid rgba(255, 255, 255, 0.1)',
-                            borderRadius: '9999px',
-                            padding: '6px 14px',
-                            fontSize: '0.85rem',
-                            color: '#D1D5DB',
+                            gap: '5px',
+                            background: 'var(--bg-elevated)',
+                            border: '1px solid var(--border)',
+                            borderRadius: 'var(--radius-full)',
+                            padding: '4px 12px',
+                            fontSize: 'var(--text-xs)',
+                            color: 'var(--text-secondary)',
                             fontWeight: 600,
                           }}
                         >
-                          <Clock size={16} color="#9CA3AF" />
+                          <Clock size={13} color="var(--text-tertiary)" />
                           <span>{phase.duration_weeks} Weeks</span>
                         </div>
                       </div>
 
                       {/* Focus Tags */}
                       {phase.focus && (
-                        <div style={{ marginBottom: '20px' }}>
-                          <div style={{ fontSize: '0.8rem', fontWeight: 600, color: '#6B7280', textTransform: 'uppercase', marginBottom: '8px' }}>
+                        <div style={{ marginBottom: '16px' }}>
+                          <div style={{ fontSize: 'var(--text-xs)', fontWeight: 700, color: 'var(--text-tertiary)', textTransform: 'uppercase', marginBottom: '6px', letterSpacing: '0.04em' }}>
                             Core Focus Areas
                           </div>
-                          <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px' }}>
+                          <div style={{ display: 'flex', flexWrap: 'wrap', gap: '6px' }}>
                             {phase.focus.map((tag, tIdx) => (
                               <Badge key={tIdx} variant={isCurrent ? 'cyan' : 'muted'}>
                                 {tag}
@@ -250,27 +250,27 @@ export const RoadmapPage = () => {
                       {/* Goals List */}
                       {phase.goals && (
                         <div>
-                          <div style={{ fontSize: '0.8rem', fontWeight: 600, color: '#6B7280', textTransform: 'uppercase', marginBottom: '8px' }}>
+                          <div style={{ fontSize: 'var(--text-xs)', fontWeight: 700, color: 'var(--text-tertiary)', textTransform: 'uppercase', marginBottom: '6px', letterSpacing: '0.04em' }}>
                             Milestones & Goals
                           </div>
-                          <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                          <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
                             {phase.goals.map((goal, gIdx) => (
                               <div
                                 key={gIdx}
                                 style={{
                                   display: 'flex',
                                   alignItems: 'center',
-                                  gap: '10px',
-                                  fontSize: '0.9rem',
-                                  color: '#D1D5DB',
+                                  gap: '8px',
+                                  fontSize: 'var(--text-xs)',
+                                  color: 'var(--text-secondary)',
                                 }}
                               >
                                 {isCompleted ? (
-                                  <CheckCircle2 size={18} color="#34D399" />
+                                  <CheckCircle2 size={15} color="var(--success)" />
                                 ) : isCurrent ? (
-                                  <Target size={18} color="#22D3EE" />
+                                  <Target size={15} color="var(--accent)" />
                                 ) : (
-                                  <Circle size={18} color="#6B7280" />
+                                  <Circle size={15} color="var(--text-tertiary)" />
                                 )}
                                 <span>{goal}</span>
                               </div>
